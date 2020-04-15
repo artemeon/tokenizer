@@ -14,6 +14,10 @@ namespace Artemeon\Tokenizer\Tokenizer;
 use ArrayIterator;
 use IteratorAggregate;
 
+/**
+ * Abstract base class for all individual grammar definitions. Use the abstract methods to configure your
+ * own parser grammar syntax.
+ */
 abstract class Grammar implements IteratorAggregate
 {
     /** @var string[] */

@@ -13,7 +13,7 @@ require '../vendor/autoload.php';
 
 $file   = new SplFileObject('./scim.txt');
 $lexer  = Lexer::fromGrammar(new ScimGrammar());
-$stream = $lexer->getTokenStream($file);
+$stream = $lexer->getTokenStreamFromFile($file);
 
 while ($stream->valid()) {
     switch ($stream->current()->getType()) {

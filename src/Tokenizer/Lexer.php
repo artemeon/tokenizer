@@ -13,6 +13,9 @@ namespace Artemeon\Tokenizer\Tokenizer;
 
 use SplFileObject;
 
+/**
+ * Lexer to create an parser token stream based on the given Grammar and input
+ */
 class Lexer
 {
     /** @var Grammar */
@@ -35,15 +38,42 @@ class Lexer
     }
 
     /**
-     * Return the token stream from the given pdf file
+     * Return the token stream from the given string
      */
-    public function getTokenStream(SplFileObject $fileObject): TokenStream
+    public function getTokenStreamFromString(string $input): TokenStream
     {
-        foreach ($fileObject as $lineNumber => $line) {
-            $line = Line::fromString($line, $lineNumber);
+        $lines = preg_split("/\n|\r\n?/", $input);
+        return $this->processLines($lines);
+    }
 
-            while (!$line->isResolved()) {
-                $this->matchToken($line);
+    /**
+     * Return the token stream from the given file object
+     */
+    public function getTokenStreamFromFile(SplFileObject $inputFile): TokenStream
+    {
+        $lines = [];
+
+        foreach ($inputFile as $line) {
+            $lines[] = $line;
+        }
+
+        return $this->processLines($lines);
+    }
+
+    /**
+     * Create the TokenStream based on the given line strings
+     *
+     * @param string[]
+     */
+    private function processLines(array $lines): TokenStream
+    {
+        $this->parsedTokens = [];
+
+        foreach ($lines as $lineNumber => $lineParser) {
+            $lineParser = LineParser::fromString($lineParser, $lineNumber);
+
+            while (!$lineParser->isResolved()) {
+                $this->applyToken($lineParser);
             }
         }
 
@@ -53,10 +83,10 @@ class Lexer
     /**
      * Apply all pattern and create a Token object on match
      */
-    private function matchToken(Line $line): void
+    private function applyToken(LineParser $lineParser): void
     {
         foreach ($this->grammar as $name => $pattern) {
-            if (!$line->matchPattern($pattern)) {
+            if (!$lineParser->applyPattern($pattern)) {
                 continue;
             }
 
@@ -64,26 +94,26 @@ class Lexer
                 return;
             }
 
-            $this->addToken($name, $line);
+            $this->addToken($name, $lineParser);
             return;
         }
 
-        if (!$line->isResolved()) {
-            $this->addToken(Grammar::UNMATCHED_KEY, $line);
-            $line->resolve();
+        if (!$lineParser->isResolved()) {
+            $this->addToken(Grammar::UNMATCHED_KEY, $lineParser);
+            $lineParser->resolve();
         }
     }
 
     /**
      * Creates and add a token to the internal stack
      */
-    private function addToken($name, Line $line): void
+    private function addToken($name, LineParser $lineParser): void
     {
         $this->parsedTokens[] = new Token(
             $name,
-            $name === Grammar::UNMATCHED_KEY ? $line->getUnmatched() : $line->getMatch(),
-            $line->getNumber(),
-            $line->getPosition()
+            $name === Grammar::UNMATCHED_KEY ? $lineParser->getUnmatched() : $lineParser->getMatch(),
+            $lineParser->getLineNumber(),
+            $lineParser->getCharacterPosition()
         );
     }
 }

@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Tokenizer;
 
+/**
+ * Token value object
+ */
 class Token
 {
     /** @var string */
@@ -20,21 +23,37 @@ class Token
     private $value;
 
     /** @var int */
-    private $number;
+    private $lineNumber;
 
     /** @var int */
-    private $position;
+    private $characterPosition;
 
     public function __construct(string $name, string $value, int $lineNumber, int $position)
     {
         $this->type  = $name;
         $this->value = $value;
-        $this->number = $lineNumber + 1;
-        $this->position = $position;
+        $this->lineNumber = $lineNumber + 1;
+        $this->characterPosition = $position;
     }
 
     /**
-     * Return the token type
+     * Return the character position
+     */
+    public function getCharacterPosition(): int
+    {
+        return $this->characterPosition;
+    }
+
+    /**
+     * Returns the line number
+     */
+    public function getLineNumber(): int
+    {
+        return $this->lineNumber;
+    }
+
+    /**
+     * Returns the token type
      */
     public function getType(): string
     {
@@ -42,7 +61,7 @@ class Token
     }
 
     /**
-     * Return the token value
+     * Returns the token value
      */
     public function getValue(): string
     {
@@ -50,7 +69,7 @@ class Token
     }
 
     /**
-     * Return the string length of the token value
+     * Returns the string length of the token value
      */
     public function getLength(): int
     {
