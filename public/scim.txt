@@ -1,1 +1,1 @@
-meta.members[value eq "2819c223-7f76-453a-919d-413861904646"].displayName
+children[value eq "3459c223-6f76-453a-919d-413861904646"].display

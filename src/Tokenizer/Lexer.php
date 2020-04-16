@@ -43,7 +43,7 @@ class Lexer
     public function getTokenStreamFromString(string $input): TokenStream
     {
         $lines = preg_split("/\n|\r\n?/", $input);
-        return $this->processLines($lines);
+        return $this->parseLines($lines);
     }
 
     /**
@@ -57,7 +57,7 @@ class Lexer
             $lines[] = $line;
         }
 
-        return $this->processLines($lines);
+        return $this->parseLines($lines);
     }
 
     /**
@@ -65,7 +65,7 @@ class Lexer
      *
      * @param string[]
      */
-    private function processLines(array $lines): TokenStream
+    private function parseLines(array $lines): TokenStream
     {
         $this->parsedTokens = [];
 

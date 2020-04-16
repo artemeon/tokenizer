@@ -21,8 +21,24 @@ class EqualsFilterExpression implements Expression
     /**
      * @inheritDoc
      */
-    public function interpret(Context $context)
+    public function interpret(ScimContext $context)
     {
-        // TODO: Implement interpret() method.
+        $data = $context->getCurrentData();
+
+        if (is_array($data)) {
+            foreach ($data as &$row) {
+                $context->setCurrentData($row);
+                $this->attributeExpression->interpret($context);
+                $this->valueExpression->interpret($context);
+                $attribute = $context->getExpressionResult($this->attributeExpression);
+                $needle = $context->getExpressionResult($this->valueExpression);
+
+                if ($attribute == $needle) {
+                    $context->setCurrentData($row);
+                    $context->setExpressionResult($this, $row);
+                    return;
+                }
+            }
+        }
     }
 }

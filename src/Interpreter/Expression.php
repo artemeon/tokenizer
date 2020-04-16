@@ -13,5 +13,5 @@ namespace Artemeon\Tokenizer\Interpreter;
 
 interface Expression
 {
-    public function interpret(Context $context);
+    public function interpret(ScimContext $context);
 }

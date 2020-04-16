@@ -11,11 +11,17 @@ class SubAttributeExpression implements Expression
 
     public function __construct(string $name)
     {
-        $this->name = $name;
+        $this->name = str_replace('.', '', $name);
     }
 
-    public function interpret(Context $context)
+    public function interpret(ScimContext $context)
     {
-        // TODO: Implement interpret() method.
+        $data = $context->getCurrentData();
+
+        if (property_exists($data, $this->name)) {
+            $attribute = &$data->{$this->name};
+            $context->setExpressionResult($this, $attribute);
+            $context->setCurrentData($attribute);
+        }
     }
 }

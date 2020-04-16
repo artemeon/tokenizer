@@ -11,11 +11,11 @@ class StringExpression implements Expression
 
     public function __construct(string $value)
     {
-        $this->value = $value;
+        $this->value = str_replace('"', '', $value);
     }
 
-    public function interpret(Context $context)
+    public function interpret(ScimContext $context)
     {
-        // TODO: Implement interpret() method.
+        $context->setExpressionResult($this, (string) $this->value);
     }
 }

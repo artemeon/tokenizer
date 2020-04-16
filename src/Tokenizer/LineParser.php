@@ -23,7 +23,7 @@ class LineParser
     private $countUnparsedCharacters;
 
     /** @var string */
-    private $lastMatch = "";
+    private $match = "";
 
     /** @var int */
     private $lineNumber;
@@ -54,13 +54,13 @@ class LineParser
      */
     public function applyPattern(string $pattern): bool
     {
-        $this->lastMatch = '';
+        $this->match = '';
 
         if (preg_match($pattern, $this->line, $matches) !== 1) {
             return false;
         }
 
-        $this->lastMatch = $matches[0];
+        $this->match = $matches[0];
         $this->line = substr($this->line, strlen($matches[0]));
         $this->countUnparsedCharacters = strlen($this->line);
         $this->characterPosition += $this->characterOffset;
@@ -74,7 +74,7 @@ class LineParser
      */
     public function getMatch(): string
     {
-        return $this->lastMatch;
+        return $this->match;
     }
 
     /**
