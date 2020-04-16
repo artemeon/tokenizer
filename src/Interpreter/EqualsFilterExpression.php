@@ -6,15 +6,15 @@ namespace Artemeon\Tokenizer\Interpreter;
 
 class EqualsFilterExpression implements Expression
 {
-    /** @var Expression */
-    private $attributeExpression;
+    /** @var string */
+    private $attribute;
 
     /** @var Expression */
     private $valueExpression;
 
-    public function __construct(Expression $attributeExpression, Expression $valueExpression)
+    public function __construct(string $attribute, Expression $valueExpression)
     {
-        $this->attributeExpression = $attributeExpression;
+        $this->attribute = $attribute;
         $this->valueExpression = $valueExpression;
     }
 
@@ -23,20 +23,22 @@ class EqualsFilterExpression implements Expression
      */
     public function interpret(ScimContext $context)
     {
-        $data = $context->getCurrentData();
+        $data = &$context->getCurrentData();
 
         if (is_array($data)) {
-            foreach ($data as &$row) {
+            foreach ($data as $index => &$row) {
                 $context->setCurrentData($row);
-                $this->attributeExpression->interpret($context);
                 $this->valueExpression->interpret($context);
-                $attribute = $context->getExpressionResult($this->attributeExpression);
                 $needle = $context->getExpressionResult($this->valueExpression);
 
-                if ($attribute == $needle) {
-                    $context->setCurrentData($row);
-                    $context->setExpressionResult($this, $row);
-                    return;
+                if (property_exists($row, $this->attribute)) {
+                    $attribute = $row->{$this->attribute};
+
+                    if ($attribute == $needle) {
+                        $context->setExpressionResult($this, $row);
+                        $context->concatQuery("[$index]");
+                        return;
+                    }
                 }
             }
         }

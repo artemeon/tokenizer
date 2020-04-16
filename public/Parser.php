@@ -77,26 +77,27 @@ class Parser
         $this->tokenStream->next();
 
         $attributeToken = $this->tokenStream->expectType(ScimGrammar::TYPE_ATTRIBUTE);
-        $operatorToken  = $this->tokenStream->expectTypeAndValue(ScimGrammar::TYPE_OPERATOR_EQUALS, 'eq');
-        $valueToken     = $this->tokenStream->expectType(ScimGrammar::TYPE_STRING);
-
-        $attributeExpression = new AttributeExpression($attributeToken->getValue());
+        $operatorToken = $this->tokenStream->expectTypeAndValue(ScimGrammar::TYPE_OPERATOR_EQUALS, 'eq');
+        $valueToken = $this->tokenStream->expectType(ScimGrammar::TYPE_STRING);
         $valueExpression = new StringExpression($valueToken->getValue());
 
-        return  $this->parseOperatorToken($operatorToken, $attributeExpression, $valueExpression);
+        return $this->parseOperatorToken($operatorToken, $attributeToken, $valueExpression);
     }
 
     /**
      * @param Token $operatorToken
-     * @param Expression $attributeExpression
+     * @param Expression $attributeToken
      * @param Expression $valueExpression
      * @throws Exception
      */
-    private function parseOperatorToken(Token $operatorToken, Expression $attributeExpression, Expression $valueExpression): Expression
-    {
+    private function parseOperatorToken(
+        Token $operatorToken,
+        Token $attributeToken,
+        Expression $valueExpression
+    ): Expression {
         switch ($operatorToken->getType()) {
             case ScimGrammar::TYPE_OPERATOR_EQUALS:
-                return new EqualsFilterExpression($attributeExpression, $valueExpression);
+                return new EqualsFilterExpression($attributeToken->getValue(), $valueExpression);
             default:
                 throw new Exception('Not supportet Operator');
         }

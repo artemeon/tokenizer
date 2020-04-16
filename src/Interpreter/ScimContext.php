@@ -23,10 +23,14 @@ class ScimContext extends Context
     /** @var mixed */
     private $currentData = [];
 
+    /** @var string */
+    private $query = '';
+
     public function __construct(string $jsonData)
     {
         $this->jsonData = json_decode($jsonData);
         $this->currentData[] = $this->jsonData;
+        $this->query = '$this->jsonData';
         parent::__construct();
     }
 
@@ -43,7 +47,7 @@ class ScimContext extends Context
      */
     public function &getCurrentData()
     {
-        return $this->currentData[count($this->currentData)-1];
+        return $this->currentData[count($this->currentData) - 1];
     }
 
     /**
@@ -53,4 +57,19 @@ class ScimContext extends Context
     {
         $this->currentData[] = $currentData;
     }
+
+    /**
+     * @param string $query
+     */
+    public function concatQuery(string $query): void
+    {
+        $this->query.= $query;
+    }
+
+    public function replace($replace)
+    {
+        eval($this->query . " = $replace;");
+    }
+
+
 }

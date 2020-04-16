@@ -24,11 +24,16 @@ foreach ($expressions as $expression) {
     $expression->interpret($context);
 }
 
-$changed = $context->getCurrentData() . 'Changed';
-$context->setCurrentData($changed);
+$test =$context->replace('test_2');
+
 $stream->rewind();
+
+
+
 
 while ($stream->valid()) {
     print_r($stream->current());
     $stream->next();
 }
+
+
