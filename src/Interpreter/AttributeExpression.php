@@ -28,8 +28,7 @@ class AttributeExpression implements Expression
             $attribute = &$data->{$this->name};
             $context->setExpressionResult($this, $attribute);
             $context->setCurrentData($attribute);
-            $context->concatQuery("->$this->name");
-
+            $context->concatPath($this->name);
         }
     }
 }

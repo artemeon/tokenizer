@@ -12,25 +12,18 @@ use SplFileObject;
 require '../vendor/autoload.php';
 require './Parser.php';
 
-$file = new SplFileObject('./scim.txt');
-$lexer = Lexer::fromGrammar(new ScimGrammar());
-$stream = $lexer->getTokenStreamFromFile($file);
+$stream = Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromFile(new SplFileObject('./scim.txt'));
+$parser = Parser::fromTokenStream($stream);
 
-$parser = new Parser($stream);
-$expressions = $parser->parse();
 $context = new ScimContext(file_get_contents('./test.json'));
+$syntaxTree = $parser->parse();
+$syntaxTree->interpret($context);
 
-foreach ($expressions as $expression) {
-    $expression->interpret($context);
-}
-
-$test =$context->replace('test_2');
+$test2 = &$context->currentData;
+$path = "children[1]";
+$t = $context->jsonData->children[1];
 
 $stream->rewind();
-
-
-
-
 while ($stream->valid()) {
     print_r($stream->current());
     $stream->next();

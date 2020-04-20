@@ -27,7 +27,6 @@ class EqualsFilterExpression implements Expression
 
         if (is_array($data)) {
             foreach ($data as $index => &$row) {
-                $context->setCurrentData($row);
                 $this->valueExpression->interpret($context);
                 $needle = $context->getExpressionResult($this->valueExpression);
 
@@ -35,8 +34,10 @@ class EqualsFilterExpression implements Expression
                     $attribute = $row->{$this->attribute};
 
                     if ($attribute == $needle) {
+                        $context->setCurrentData($data[$index]);
+                        $context->concatPath("[$index]");
+
                         $context->setExpressionResult($this, $row);
-                        $context->concatQuery("[$index]");
                         return;
                     }
                 }

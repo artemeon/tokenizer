@@ -16,8 +16,9 @@ use Artemeon\Tokenizer\Interpreter\EqualsFilterExpression;
 use Artemeon\Tokenizer\Interpreter\Expression;
 use Artemeon\Tokenizer\Interpreter\StringExpression;
 use Artemeon\Tokenizer\Interpreter\SubAttributeExpression;
-use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
+use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
+use Artemeon\Tokenizer\Interpreter\SyntaxTree;
 use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
 use Artemeon\Tokenizer\Tokenizer\Token;
 use Artemeon\Tokenizer\Tokenizer\TokenStream;
@@ -31,9 +32,17 @@ class Parser
     /** @var Expression[] */
     private $expressions = [];
 
-    public function __construct(TokenStream $tokenStream)
+    private function __construct(TokenStream $tokenStream)
     {
         $this->tokenStream = $tokenStream;
+    }
+
+    /**
+     * Named constructor to create an instance based on the given TokenStream
+     */
+    public static function fromTokenStream(TokenStream $tokenStream): self
+    {
+        return new self($tokenStream);
     }
 
     /**
@@ -41,7 +50,7 @@ class Parser
      * @throws UnexpectedTokenValueException
      * @throws UnexpectedTokenException
      */
-    public function parse(): array
+    public function parse(): SyntaxTree
     {
         while ($this->tokenStream->valid()) {
             $token = $this->tokenStream->current();
@@ -64,7 +73,7 @@ class Parser
             }
         }
 
-        return $this->expressions;
+        return SyntaxTree::fromArray($this->expressions);
     }
 
     /**

@@ -14,6 +14,9 @@ class StringExpression implements Expression
         $this->value = str_replace('"', '', $value);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function interpret(ScimContext $context)
     {
         $context->setExpressionResult($this, (string) $this->value);

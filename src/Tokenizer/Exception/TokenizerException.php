@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer\Exception;
+namespace Artemeon\Tokenizer\Interpreter\Exception;
 
 use Exception;
 
