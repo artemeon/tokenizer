@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Interpreter;
+namespace Artemeon\Tokenizer\Interpreter\Expression;
+
+use Artemeon\Tokenizer\Interpreter\Operation\Operation;
+use Artemeon\Tokenizer\Interpreter\ScimContext;
 
 class EqualsFilterExpression implements Expression
 {
@@ -12,10 +15,14 @@ class EqualsFilterExpression implements Expression
     /** @var Expression */
     private $valueExpression;
 
-    public function __construct(string $attribute, Expression $valueExpression)
+    /** @var Operation|null */
+    private $operation;
+
+    public function __construct(string $attribute, Expression $valueExpression, ?Operation $operation)
     {
         $this->attribute = $attribute;
         $this->valueExpression = $valueExpression;
+        $this->operation = $operation;
     }
 
     /**
@@ -31,12 +38,15 @@ class EqualsFilterExpression implements Expression
                 $needle = $context->getExpressionResult($this->valueExpression);
 
                 if (property_exists($row, $this->attribute)) {
-                    $attribute = $row->{$this->attribute};
+                    $propertyValue = $row->{$this->attribute};
 
-                    if ($attribute == $needle) {
-                        $context->setCurrentData($data[$index]);
-                        $context->concatPath("[$index]");
+                    if ($propertyValue == $needle) {
+                        if ($this->operation instanceof Operation) {
+                            $this->operation->processMultiValuedAttribute($data, $index);
+                            return;
+                        }
 
+                        $context->setCurrentData($row);
                         $context->setExpressionResult($this, $row);
                         return;
                     }

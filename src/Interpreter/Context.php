@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
+use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use Exception;
 use SplObjectStorage;
 use UnexpectedValueException;

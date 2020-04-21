@@ -8,13 +8,15 @@ use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Tokenizer\Lexer;
 use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
-use SplFileObject;
 
 require '../vendor/autoload.php';
 require './Parser.php';
 
-$stream = Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromFile(new SplFileObject('./scim.txt'));
-$parser = Parser::fromTokenStream($stream);
+$parser = Parser::fromTokenStream(
+    Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromString(
+        'children[value eq "3459c223-6f76-453a-919d-413861904646"]'
+    )
+);
 
 $context = new ScimContext(file_get_contents('./test.json'));
 $syntaxTree = $parser->parse(new RemoveOperation());

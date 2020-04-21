@@ -18,13 +18,13 @@ use stdClass;
 class ScimContext extends Context
 {
     /** @var stdClass */
-    public $jsonData;
+    private $jsonData;
 
     /** @var mixed */
-    public $currentData;
+    private $currentData;
 
     /** @var string */
-    public $path = '';
+    private $path = '';
 
     public function __construct(string $jsonData)
     {
@@ -55,10 +55,5 @@ class ScimContext extends Context
     public function setCurrentData(&$currentData): void
     {
         $this->currentData = &$currentData;
-    }
-
-    public function concatPath(string $path)
-    {
-        $this->path.= $path;
     }
 }
