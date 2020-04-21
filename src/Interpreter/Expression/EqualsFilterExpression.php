@@ -41,7 +41,7 @@ class EqualsFilterExpression implements Expression
                     $propertyValue = $row->{$this->attribute};
 
                     if ($propertyValue == $needle) {
-                        if ($this->operation instanceof Operation) {
+                        if ($context->isLastExpression($this)) {
                             $this->operation->processMultiValuedAttribute($data, $index);
                             return;
                         }

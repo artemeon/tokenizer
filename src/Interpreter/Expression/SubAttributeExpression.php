@@ -29,7 +29,7 @@ class SubAttributeExpression implements Expression
     {
         $data = &$context->getCurrentData();
 
-        if ($this->operation instanceof Operation) {
+        if ($context->isLastExpression($this)) {
             $this->processOperation($data);
             return;
         }
@@ -38,9 +38,9 @@ class SubAttributeExpression implements Expression
             throw new ScimException("Missing sub property:" . $this->name);
         }
 
-        $attribute = &$data->{$this->name};
-        $context->setExpressionResult($this, $attribute);
-        $context->setCurrentData($attribute);
+        $propertyValue = &$data->{$this->name};
+        $context->setExpressionResult($this, $propertyValue);
+        $context->setCurrentData($propertyValue);
     }
 
     /**
@@ -48,14 +48,20 @@ class SubAttributeExpression implements Expression
      */
     private function processOperation(&$data): void
     {
-        $propertyValue = &$data->{$this->name};
+        if (property_exists($data, $this->name)) {
+            $propertyValue = &$data->{$this->name};
+        } else {
+            $propertyValue = $data;
+        }
 
         if (is_array($propertyValue)) {
             $this->operation->processMultiValuedAttribute($propertyValue);
+            return;
         }
 
         if (is_object($propertyValue)) {
             $this->operation->processComplexAttribute($this->name, $propertyValue);
+            return;
         }
 
         $this->operation->processSingleValuedAttribute($propertyValue);

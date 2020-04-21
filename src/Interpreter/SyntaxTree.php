@@ -28,6 +28,7 @@ class SyntaxTree implements Expression
     public static function fromArray(array $expressions): self
     {
         $instance = new self();
+
         foreach ($expressions as $expression) {
             $instance->addExpression($expression);
         }
@@ -40,6 +41,10 @@ class SyntaxTree implements Expression
      */
     public function interpret(ScimContext $context)
     {
+        $lastIndex = max(array_keys($this->expressions));
+        $lastExpression = $this->expressions[$lastIndex];
+        $context->setLastExpression($lastExpression);
+
         foreach ($this->expressions as $expression) {
             $expression->interpret($context);
         }

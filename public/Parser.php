@@ -113,7 +113,7 @@ class Parser
     ): Expression {
         switch ($operatorToken->getType()) {
             case ScimGrammar::TYPE_OPERATOR_EQUALS:
-                return new EqualsFilterExpression($attributeToken->getValue(), $valueExpression, $this->getOperation(2));
+                return new EqualsFilterExpression($attributeToken->getValue(), $valueExpression, $this->getOperation(1));
             default:
                 throw new Exception('Not supportet Operator');
         }

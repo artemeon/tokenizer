@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
+use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use stdClass;
 
 class ScimContext extends Context
@@ -23,8 +24,8 @@ class ScimContext extends Context
     /** @var mixed */
     private $currentData;
 
-    /** @var string */
-    private $path = '';
+    /** @var Expression */
+    private $lastExpression;
 
     public function __construct(string $jsonData)
     {
@@ -55,5 +56,21 @@ class ScimContext extends Context
     public function setCurrentData(&$currentData): void
     {
         $this->currentData = &$currentData;
+    }
+
+    /**
+     * @return Expression
+     */
+    public function isLastExpression(Expression $expression): bool
+    {
+        return $this->lastExpression === $expression;
+    }
+
+    /**
+     * @param Expression $lastExpression
+     */
+    public function setLastExpression(Expression $lastExpression): void
+    {
+        $this->lastExpression = $lastExpression;
     }
 }

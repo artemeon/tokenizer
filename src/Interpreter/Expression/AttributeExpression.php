@@ -29,7 +29,7 @@ class AttributeExpression implements Expression
     {
         $data = &$context->getCurrentData();
 
-        if ($this->operation instanceof Operation) {
+        if ($context->isLastExpression($this)) {
             $this->processOperation($data);
             return;
         }
