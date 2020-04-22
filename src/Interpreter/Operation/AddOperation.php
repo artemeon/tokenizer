@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Operation;
 
-use stdClass;
+use Artemeon\Tokenizer\Interpreter\JsonNode;
 
 class AddOperation implements Operation
 {
@@ -28,30 +28,26 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processMultiValuedAttribute(array &$targets, $index = null)
+    public function processArrayNode(JsonNode $jsonNode)
     {
-        if ($index !== null) {
-            foreach ($this->value as $value) {
-                $targets[] = $value;
-            }
-        } else {
-            $targets[$index] = $this->value;
+        $target = &$jsonNode->getPropertyValue();
+
+        foreach ($this->value as $value) {
+            $target[] = $value;
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function processSingleValuedAttribute(&$target)
+    public function processObjectNode(JsonNode $jsonNode)
     {
-        $target = $this->value;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function processComplexAttribute(string $attribute, stdClass $target)
-    {
-        $target->{$attribute} = $this->value;
+        if ($jsonNode->propertyExists()) {
+            $target = &$jsonNode->getPropertyValue();
+            $target = $this->value;
+        } else {
+            $target = &$jsonNode->getData();
+            $target->{$jsonNode->getPropertyName()} = $this->value;
+        }
     }
 }

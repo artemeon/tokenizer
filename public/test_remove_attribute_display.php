@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Artemeon\Tokenizer\Interpreter\Operation\ReplaceOperation;
+use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Tokenizer\Lexer;
 use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
@@ -12,24 +12,15 @@ use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
 require '../vendor/autoload.php';
 require './Parser.php';
 
-$childJson = json_decode(
-    "
-        {
-            \"value\": \"7567-5677-675675-97898\",
-            \"ref\": \"/Units/7567-5677-675675-97898\",
-            \"display\": \"New Controlling 4\"
-        }
-"
-);
-
 $parser = Parser::fromTokenStream(
     Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromString(
-        'children[value eq "3459c223-6f76-453a-919d-413861904646"]'
+        'children[value eq "3459c223-6f76-453a-919d-413861904646"].display'
     )
 );
 
-$context = new ScimContext(file_get_contents('./test.json'), new ReplaceOperation($childJson));
+$context = new ScimContext(file_get_contents('./test.json'), new RemoveOperation());
 $syntaxTree = $parser->parse();
 $syntaxTree->interpret($context);
 
 var_dump($context->getJsonData()->children);
+

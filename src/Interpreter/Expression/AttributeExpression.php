@@ -6,6 +6,7 @@ namespace Artemeon\Tokenizer\Interpreter\Expression;
 
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Interpreter\ScimException;
+use Artemeon\Tokenizer\Interpreter\JsonNode;
 
 class AttributeExpression implements Expression
 {
@@ -25,12 +26,7 @@ class AttributeExpression implements Expression
         $data = &$context->getCurrentData();
 
         if ($context->isLastExpression($this)) {
-            if (property_exists($data, $this->name)) {
-                $context->setOperationData($data->{$this->name});
-                return;
-            }
-
-            $context->setOperationData($data, null, $this->name);
+            $context->setFoundNode(JsonNode::fromObject($data, $this->name));
             return;
         }
 

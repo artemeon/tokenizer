@@ -13,35 +13,41 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Operation;
 
-use stdClass;
+use Artemeon\Tokenizer\Interpreter\JsonNode;
 
 class RemoveOperation implements Operation
 {
     /**
      * @inheritDoc
      */
-    public function processMultiValuedAttribute(array &$targets, $index = null)
+    public function processArrayNode(JsonNode $jsonNode)
     {
-        if ($index === null) {
-            $targets = [];
-        } else {
-            unset($targets[$index]);
+        if (!$jsonNode->propertyExists()) {
+            return;
         }
+
+        if ($jsonNode->getIndex() === null) {
+            $target = &$jsonNode->getPropertyValue();
+            $target = [];
+
+            return;
+        }
+
+        $target = &$jsonNode->getData();
+
+        unset($target[$jsonNode->getIndex()]);
     }
 
     /**
      * @inheritDoc
      */
-    public function processSingleValuedAttribute(&$target)
+    public function processObjectNode(JsonNode $jsonNode)
     {
-        $target = null;
-    }
+        if (!$jsonNode->propertyExists()) {
+            return;
+        }
 
-    /**
-     * @inheritDoc
-     */
-    public function processComplexAttribute(string $attribute, stdClass $target)
-    {
-        unset($target->{$attribute});
+        $target = &$jsonNode->getData();
+        unset($target->{$jsonNode->getPropertyName()});
     }
 }

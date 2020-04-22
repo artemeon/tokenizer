@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Operation;
 
+use Artemeon\Tokenizer\Interpreter\JsonNode;
 use stdClass;
 
 interface Operation
 {
-    public function processMultiValuedAttribute(array &$targets, $index = null);
-
-    public function processSingleValuedAttribute(&$target);
-
-    public function processComplexAttribute(string $attribute, stdClass $target);
+    public function processArrayNode(JsonNode $jsonNode);
+    public function processObjectNode(JsonNode $jsonNode);
 }

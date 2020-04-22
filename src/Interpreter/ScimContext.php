@@ -40,25 +40,14 @@ class ScimContext extends Context
         parent::__construct();
     }
 
-    /**
-     * @param $propertyValue
-     * @param $index
-     * @param string $attributeName
-     */
-    public function setOperationData(&$propertyValue, $index = null, string $attributeName = '')
+    public function setFoundNode(JsonNode $targetNode)
     {
-        if (is_array($propertyValue)) {
-            $index = $index ?? max(array_keys($propertyValue)) + 1;
-            $this->operation->processMultiValuedAttribute($propertyValue, $index);
+        if ($targetNode->isArrayNode()) {
+            $this->operation->processArrayNode($targetNode);
             return;
         }
 
-        if (is_object($propertyValue)) {
-            $this->operation->processComplexAttribute($attributeName, $propertyValue);
-            return;
-        }
-
-        $this->operation->processSingleValuedAttribute($propertyValue);
+        $this->operation->processObjectNode($targetNode);
     }
 
     /**

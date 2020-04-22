@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Expression;
 
+use Artemeon\Tokenizer\Interpreter\JsonNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 
 class EqualsFilterExpression implements Expression
@@ -37,7 +38,7 @@ class EqualsFilterExpression implements Expression
 
                     if ($propertyValue == $needle) {
                         if ($context->isLastExpression($this)) {
-                            $context->setOperationData($data, $index);
+                            $context->setFoundNode(JsonNode::fromArray($data, $index));
                             return;
                         }
 
