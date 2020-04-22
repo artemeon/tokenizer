@@ -20,14 +20,14 @@ class RemoveOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArrayNode(JsonNode $jsonNode)
+    public function processArray(JsonNode $jsonNode)
     {
-        if (!$jsonNode->propertyExists()) {
+        if (!$jsonNode->targetExists()) {
             return;
         }
 
         if ($jsonNode->getIndex() === null) {
-            $target = &$jsonNode->getPropertyValue();
+            $target = &$jsonNode->getTargetValue();
             $target = [];
 
             return;
@@ -41,13 +41,13 @@ class RemoveOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObjectNode(JsonNode $jsonNode)
+    public function processObject(JsonNode $jsonNode)
     {
-        if (!$jsonNode->propertyExists()) {
+        if (!$jsonNode->targetExists()) {
             return;
         }
 
         $target = &$jsonNode->getData();
-        unset($target->{$jsonNode->getPropertyName()});
+        unset($target->{$jsonNode->getTargetName()});
     }
 }

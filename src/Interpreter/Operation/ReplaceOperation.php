@@ -28,10 +28,10 @@ class ReplaceOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArrayNode(JsonNode $jsonNode)
+    public function processArray(JsonNode $jsonNode)
     {
-        if ($jsonNode->propertyExists()) {
-            $target = &$jsonNode->getPropertyValue();
+        if ($jsonNode->targetExists()) {
+            $target = &$jsonNode->getTargetValue();
             $target = $this->value;
             return;
         }
@@ -43,15 +43,15 @@ class ReplaceOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObjectNode(JsonNode $jsonNode)
+    public function processObject(JsonNode $jsonNode)
     {
-        if ($jsonNode->propertyExists()) {
-            $target = &$jsonNode->getPropertyValue();
+        if ($jsonNode->targetExists()) {
+            $target = &$jsonNode->getTargetValue();
             $target = $this->value;
             return;
         }
 
         $target = &$jsonNode->getData();
-        $target->{$jsonNode->getPropertyName()} = (object) array_merge((array) $target, (array) $this->value);
+        $target->{$jsonNode->getTargetName()} = (object) array_merge((array) $target, (array) $this->value);
     }
 }

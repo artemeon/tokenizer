@@ -42,12 +42,12 @@ class ScimContext extends Context
 
     public function setFoundNode(JsonNode $targetNode)
     {
-        if ($targetNode->isArrayNode()) {
-            $this->operation->processArrayNode($targetNode);
+        if ($targetNode->isArray()) {
+            $this->operation->processArray($targetNode);
             return;
         }
 
-        $this->operation->processObjectNode($targetNode);
+        $this->operation->processObject($targetNode);
     }
 
     /**

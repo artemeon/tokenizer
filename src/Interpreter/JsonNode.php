@@ -21,7 +21,7 @@ class JsonNode
     private $data;
 
     /** @var string  */
-    private $propertyName;
+    private $targetName;
 
     /** @var mixed */
     private $index;
@@ -29,7 +29,7 @@ class JsonNode
     private function __construct(&$data, string $propertyName, $index)
     {
         $this->data = &$data;
-        $this->propertyName = $propertyName;
+        $this->targetName = $propertyName;
         $this->index = $index;
     }
 
@@ -46,10 +46,10 @@ class JsonNode
     /**
      * @return bool
      */
-    public function propertyExists(): bool
+    public function targetExists(): bool
     {
-        if ($this->propertyName !== '') {
-            return property_exists($this->data, $this->propertyName);
+        if ($this->targetName !== '') {
+            return property_exists($this->data, $this->targetName);
         }
 
         return isset($this->data[$this->index]);
@@ -58,10 +58,10 @@ class JsonNode
     /**
      * @return mixed|null
      */
-    public function &getPropertyValue()
+    public function &getTargetValue()
     {
-        if ($this->propertyName !== '') {
-            return $this->data->{$this->propertyName};
+        if ($this->targetName !== '') {
+            return $this->data->{$this->targetName};
         }
 
         return $this->data[$this->index];
@@ -78,9 +78,9 @@ class JsonNode
     /**
      * @return string
      */
-    public function getPropertyName(): string
+    public function getTargetName(): string
     {
-        return $this->propertyName;
+        return $this->targetName;
     }
 
     /**
@@ -94,12 +94,16 @@ class JsonNode
     /**
      * @return bool
      */
-    public function isArrayNode(): bool
+    public function isArray(): bool
     {
-        if (is_array($this->getPropertyValue())) {
+        if (is_array($this->data)) {
             return true;
+        };
+
+        if (property_exists($this->data, $this->targetName)) {
+            return is_array($this->getTargetValue());
         }
 
-        return is_array($this->data);
+        return false;
     }
 }

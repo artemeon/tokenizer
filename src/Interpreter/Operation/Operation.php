@@ -18,6 +18,6 @@ use stdClass;
 
 interface Operation
 {
-    public function processArrayNode(JsonNode $jsonNode);
-    public function processObjectNode(JsonNode $jsonNode);
+    public function processArray(JsonNode $jsonNode);
+    public function processObject(JsonNode $jsonNode);
 }

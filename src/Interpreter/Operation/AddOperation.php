@@ -28,9 +28,9 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArrayNode(JsonNode $jsonNode)
+    public function processArray(JsonNode $jsonNode)
     {
-        $target = &$jsonNode->getPropertyValue();
+        $target = &$jsonNode->getTargetValue();
 
         foreach ($this->value as $value) {
             $target[] = $value;
@@ -40,14 +40,14 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObjectNode(JsonNode $jsonNode)
+    public function processObject(JsonNode $jsonNode)
     {
-        if ($jsonNode->propertyExists()) {
-            $target = &$jsonNode->getPropertyValue();
+        if ($jsonNode->targetExists()) {
+            $target = &$jsonNode->getTargetValue();
             $target = $this->value;
         } else {
             $target = &$jsonNode->getData();
-            $target->{$jsonNode->getPropertyName()} = $this->value;
+            $target->{$jsonNode->getTargetName()} = $this->value;
         }
     }
 }
