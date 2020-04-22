@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
+use phpDocumentor\Reflection\Types\Boolean;
 use stdClass;
 
 class JsonNode
@@ -48,11 +49,20 @@ class JsonNode
      */
     public function targetExists(): bool
     {
+        if ($this->targetName === '' && $this->index === null) {
+            return false;
+        }
+
         if ($this->targetName !== '') {
             return property_exists($this->data, $this->targetName);
         }
 
         return isset($this->data[$this->index]);
+    }
+
+    public function hasTargetName(): bool
+    {
+        return $this->targetName !== '';
     }
 
     /**

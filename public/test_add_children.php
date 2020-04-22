@@ -4,30 +4,27 @@ declare(strict_types=1);
 
 namespace App;
 
-use Artemeon\Tokenizer\Interpreter\Operation\AddOperation;
-use Artemeon\Tokenizer\Interpreter\ScimContext;
-use Artemeon\Tokenizer\Tokenizer\Lexer;
-use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
+use Artemeon\Tokenizer\Interpreter\ScimPatchRequest;
+use Artemeon\Tokenizer\Interpreter\ScimPatchService;
 
 require '../vendor/autoload.php';
 require './Parser.php';
 
-$childJson = json_decode("
+$childJson = json_decode(
+    "
     [
         {
-            \"value\": \"7567-5677-675675-97898\",
-            \"ref\": \"/Units/7567-5677-675675-97898\",
-            \"display\": \"New Controlling 4\"
+                \"value\": \"7567-5677-675675-97898\",
+                \"ref\": \"/Units/7567-5677-675675-97898\",
+                \"display\": \"New Controlling 4\"
         }
     ]
-");
-
-$parser = Parser::fromTokenStream(
-    Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromString('children')
+    "
 );
 
-$context = new ScimContext(file_get_contents('./test.json'), new AddOperation($childJson));
-$syntaxTree = $parser->parse();
-$syntaxTree->interpret($context);
+$jsonObject = json_decode(file_get_contents('./test.json'));
+$scimPatchRequest = ScimPatchRequest::forAdd('children', $childJson);
+$scimPatchService = new ScimPatchService();
+$result = $scimPatchService->execute($scimPatchRequest, $jsonObject);
 
-var_dump($context->getJsonData()->children);
+var_dump($result->children);

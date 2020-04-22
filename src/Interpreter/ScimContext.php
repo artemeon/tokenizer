@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
-use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 use stdClass;
 
 class ScimContext extends Context
@@ -28,26 +27,28 @@ class ScimContext extends Context
     /** @var Expression */
     private $lastExpression;
 
-    /** @var Operation */
-    private $operation;
+    /** @var JsonNode */
+    private $jsonNode;
 
-    public function __construct(string $jsonData, Operation $operation)
+    public function __construct(stdClass $jsonObject)
     {
-        $this->operation = $operation;
-        $this->jsonData = json_decode($jsonData);
+        $this->jsonData = $jsonObject;
         $this->currentData = $this->jsonData;
 
         parent::__construct();
     }
 
-    public function setFoundNode(JsonNode $targetNode)
+    /**
+     * @return JsonNode
+     */
+    public function getJsonNode(): JsonNode
     {
-        if ($targetNode->isArray()) {
-            $this->operation->processArray($targetNode);
-            return;
-        }
+        return $this->jsonNode;
+    }
 
-        $this->operation->processObject($targetNode);
+    public function setFoundNode(JsonNode $jsonNode)
+    {
+        $this->jsonNode = $jsonNode;
     }
 
     /**

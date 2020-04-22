@@ -14,10 +14,17 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter\Operation;
 
 use Artemeon\Tokenizer\Interpreter\JsonNode;
-use stdClass;
+use Artemeon\Tokenizer\Interpreter\ScimException;
 
 interface Operation
 {
+    /**
+     * @throws ScimException
+     */
     public function processArray(JsonNode $jsonNode);
+
+    /**
+     * @throws ScimException
+     */
     public function processObject(JsonNode $jsonNode);
 }
