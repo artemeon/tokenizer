@@ -11,15 +11,13 @@ declare(strict_types=1);
 
 namespace App;
 
+use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Interpreter\Expression\AttributeExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\EqualsFilterExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use Artemeon\Tokenizer\Interpreter\Expression\StringExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\SubAttributeExpression;
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
-use Artemeon\Tokenizer\Interpreter\Operation\Operation;
-use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
 use Artemeon\Tokenizer\Interpreter\SyntaxTree;
 use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
 use Artemeon\Tokenizer\Tokenizer\Token;
@@ -33,9 +31,6 @@ class Parser
 
     /** @var Expression[] */
     private $expressions = [];
-
-    /** @var Operation */
-    private $operation;
 
     private function __construct(TokenStream $tokenStream)
     {
@@ -55,20 +50,18 @@ class Parser
      * @throws UnexpectedTokenValueException
      * @throws UnexpectedTokenException
      */
-    public function parse(Operation $operation): SyntaxTree
+    public function parse(): SyntaxTree
     {
-        $this->operation = $operation;
-
         while ($this->tokenStream->valid()) {
             $token = $this->tokenStream->current();
 
             switch ($token->getType()) {
                 case ScimGrammar::TYPE_ATTRIBUTE:
-                    $this->expressions[] = new AttributeExpression($token->getValue(), $this->getOperation());
+                    $this->expressions[] = new AttributeExpression($token->getValue());
                     $this->tokenStream->next();
                     break;
                 case ScimGrammar::TYPE_SUB_ATTRIBUTE:
-                    $this->expressions[] = new SubAttributeExpression($token->getValue(), $this->getOperation());
+                    $this->expressions[] = new SubAttributeExpression($token->getValue());
                     $this->tokenStream->next();
                     break;
                 case ScimGrammar::TYPE_FILTER_START:
@@ -113,20 +106,9 @@ class Parser
     ): Expression {
         switch ($operatorToken->getType()) {
             case ScimGrammar::TYPE_OPERATOR_EQUALS:
-                return new EqualsFilterExpression($attributeToken->getValue(), $valueExpression, $this->getOperation(1));
+                return new EqualsFilterExpression($attributeToken->getValue(), $valueExpression);
             default:
                 throw new Exception('Not supportet Operator');
         }
-    }
-
-    /**
-     * @return Operation|null
-     */
-    private function getOperation(int $offset = 1): ?Operation {
-        if ($this->tokenStream->lookAhead($offset) === null) {
-            return $this->operation;
-        }
-
-        return null;
     }
 }

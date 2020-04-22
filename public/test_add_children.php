@@ -23,13 +23,11 @@ $childJson = json_decode("
 ");
 
 $parser = Parser::fromTokenStream(
-    Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromString(
-        'children'
-    )
+    Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromString('children')
 );
 
-$context = new ScimContext(file_get_contents('./test.json'));
-$syntaxTree = $parser->parse(new AddOperation($childJson));
+$context = new ScimContext(file_get_contents('./test.json'), new AddOperation($childJson));
+$syntaxTree = $parser->parse();
 $syntaxTree->interpret($context);
 
 var_dump($context->getJsonData()->children);

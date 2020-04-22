@@ -20,11 +20,6 @@ class AddOperation implements Operation
     /** @var mixed */
     private $value;
 
-    /**
-     * AddOperation constructor.
-     *
-     * @param mixed $value
-     */
     public function __construct($value)
     {
         $this->value = $value;

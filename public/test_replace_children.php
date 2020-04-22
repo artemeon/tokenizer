@@ -30,8 +30,8 @@ $parser = Parser::fromTokenStream(
     )
 );
 
-$context = new ScimContext(file_get_contents('./test.json'));
-$syntaxTree = $parser->parse(new ReplaceOperation($childJson));
+$context = new ScimContext(file_get_contents('./test.json'), new ReplaceOperation($childJson));
+$syntaxTree = $parser->parse();
 $syntaxTree->interpret($context);
 
 var_dump($context->getJsonData()->children);
