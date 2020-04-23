@@ -57,7 +57,7 @@ class ReplaceOperation implements Operation
 
         // Add new properties
         $target = &$jsonNode->getData();
-        $target->{$jsonNode->getTargetName()} = is_object($target) ? $this->mergeComplexType($target) : $this->value;
+        $target->{$jsonNode->getTargetName()} = $this->value;
     }
 
     /**
