@@ -21,6 +21,9 @@ class AddOperation implements Operation
     /** @var mixed */
     private $value;
 
+    /** @var string */
+    public const NAME = 'add';
+
     public function __construct($value)
     {
         $this->value = $value;
@@ -33,10 +36,12 @@ class AddOperation implements Operation
     {
         $target = &$jsonNode->getTargetValue();
 
+        // For multi valued operations, the patch value must be an array
         if (!is_array($this->value)) {
-            throw new ScimException('Given value must be an array');
+            throw ScimException::forInvalidValue('PatchOp:value', 'Value must be an array');
         }
 
+        // If the target location specifies a multi-valued attribute, a new value is added.
         foreach ($this->value as $value) {
             $target[] = $value;
         }
@@ -47,21 +52,23 @@ class AddOperation implements Operation
      */
     public function processObject(JsonNode $jsonNode)
     {
-        // Overwrite value if property already exists
+        // If the target location specifies a single-valued attribute, the existing value is replaced.
+        // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if ($jsonNode->targetExists()) {
             $target = &$jsonNode->getTargetValue();
             $target = is_object($this->value) ? $this->mergeComplexType($target) : $this->value;
             return;
         }
 
-        // Add a new property with the given value
+        // If the target location does not exist, the attribute and value are added.
         if ($jsonNode->hasTargetName()) {
             $target = &$jsonNode->getData();
             $target->{$jsonNode->getTargetName()} = $this->value;
             return;
         }
 
-        // Merge the given object properties into the root resource
+        // If omitted, the target location is assumed to be the resource itself.
+        // The "value" parameter contains a set of attributes to be added to the resource.
         $target = &$jsonNode->getData();
         $target = $this->mergeComplexType($target);
     }
@@ -73,8 +80,9 @@ class AddOperation implements Operation
      */
     private function mergeComplexType(&$target): object
     {
+        // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if (!is_object($this->value)) {
-            throw new ScimException('Complex value required');
+            throw ScimException::forInvalidValue('PatchOp:value','Complex value required');
         }
 
         return (object) array_merge((array) $target, (array) $this->value);

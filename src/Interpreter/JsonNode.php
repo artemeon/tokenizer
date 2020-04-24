@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
-use phpDocumentor\Reflection\Types\Boolean;
 use stdClass;
 
 class JsonNode
@@ -21,7 +20,7 @@ class JsonNode
     /** @var mixed */
     private $data;
 
-    /** @var string  */
+    /** @var string */
     private $targetName;
 
     /** @var mixed */
@@ -34,11 +33,19 @@ class JsonNode
         $this->index = $index;
     }
 
+    /**
+     * Named constructor to create an instance based on the given array
+     *
+     * @param int|string $index
+     */
     public static function fromArray(array &$data, $index = null): self
     {
-        return new self($data, '',  $index ?? max(array_keys($data)) + 1);
+        return new self($data, '', $index ?? max(array_keys($data)) + 1);
     }
 
+    /**
+     * Named constructor to create an instance based on the given stdClass
+     */
     public static function fromObject(stdClass &$data, string $propertyName): self
     {
         return new self($data, $propertyName, null);

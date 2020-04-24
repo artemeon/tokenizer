@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
-use Exception;
 use SplObjectStorage;
 use UnexpectedValueException;
 
@@ -23,9 +22,6 @@ class Context
 {
     /** @var SplObjectStorage */
     protected $expressionStorage;
-
-    /** @var Exception */
-    protected $previousExpresion;
 
     public function __construct()
     {
@@ -39,29 +35,17 @@ class Context
      */
     public function setExpressionResult(Expression $expression, $result): void
     {
-        $this->previousExpresion = $expression;
         $this->expressionStorage->offsetSet($expression, $result);
     }
 
     /**
      * Return the result value of the given expression
      *
-     * @throws UnexpectedValueException
      * @return mixed
+     * @throws UnexpectedValueException
      */
     public function getExpressionResult(Expression $expression)
     {
         return $this->expressionStorage->offsetGet($expression);
-    }
-
-    /**
-     * Return the result value of the previous set expression
-     *
-     * @throws UnexpectedValueException
-     * @return mixed
-     */
-    public function getPreviousExpressionResult()
-    {
-        return $this->expressionStorage->offsetGet($this->previousExpresion);
     }
 }

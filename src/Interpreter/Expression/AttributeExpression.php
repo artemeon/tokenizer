@@ -31,7 +31,7 @@ class AttributeExpression implements Expression
         }
 
         if (!property_exists($data, $this->name)) {
-            throw new ScimException("Missing property:" . $this->name);
+            throw ScimException::forNoTarget($this->name);
         }
 
         $propertyValue = &$data->{$this->name};

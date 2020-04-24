@@ -21,6 +21,9 @@ class ReplaceOperation implements Operation
     /** @var mixed */
     private $value;
 
+    /** @var string */
+    public const NAME = 'replace';
+
     public function __construct($value)
     {
         $this->value = $value;
@@ -31,15 +34,24 @@ class ReplaceOperation implements Operation
      */
     public function processArray(JsonNode $jsonNode)
     {
-        // Replace existing array entry
+        // If the target location is a multi-valued attribute and no filter is specified, the attribute
+        // and all values are replaced. If the target location is a multi-valued attribute and a value
+        // selection ("valuePath") filter is specified that matches one or more values of the multi-valued
+        // attribute, then all matching record values SHALL be replaced.
         if ($jsonNode->targetExists()) {
             $target = &$jsonNode->getTargetValue();
-            $target = $this->value;
+            $target = is_object($target) ? $this->mergeComplexType($target) : $this->value;
             return;
         }
 
-        // Add a new entry
+        // If the target location path specifies an attribute that does not exist,
+        // the service provider SHALL treat the operation as an "add".
         $target = &$jsonNode->getData();
+
+        if (!is_array($target)) {
+            throw ScimException::forInvalidValue('PatchOp:value', 'Target must be an array');
+        }
+
         $target[] = $this->value;
     }
 
@@ -48,16 +60,19 @@ class ReplaceOperation implements Operation
      */
     public function processObject(JsonNode $jsonNode)
     {
-        // Replace existing property
+        // If the target location is a single-value attribute, the attributes value is replaced.
+        // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if ($jsonNode->targetExists()) {
             $target = &$jsonNode->getTargetValue();
             $target = is_object($target) ? $this->mergeComplexType($target) : $this->value;
             return;
         }
 
-        // Add new properties
+        // If the target location path specifies an attribute that does not exist,
+        // the service provider SHALL treat the operation as an "add".
         $target = &$jsonNode->getData();
-        $target->{$jsonNode->getTargetName()} = $this->value;
+        $value = is_object($target) ? $this->mergeComplexType($target) : $this->value;
+        $target->{$jsonNode->getTargetName()} = $value;
     }
 
     /**
@@ -65,10 +80,11 @@ class ReplaceOperation implements Operation
      *
      * @throws ScimException
      */
-    private function &mergeComplexType(&$target): object
+    private function mergeComplexType(&$target): object
     {
+        // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if (!is_object($this->value)) {
-            throw new ScimException('Complex value required');
+            throw ScimException::forInvalidValue('PatchOp:value', 'Complex value required');
         }
 
         return (object) array_merge((array) $target, (array) $this->value);

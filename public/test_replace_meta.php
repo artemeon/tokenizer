@@ -10,21 +10,19 @@ use Artemeon\Tokenizer\Interpreter\ScimPatchService;
 require '../vendor/autoload.php';
 require './Parser.php';
 
-$childJson = json_decode(
+$patchObject = json_decode(
     "
-    [
         {
-            \"value\": \"7567-5677-675675-97898\",
-            \"ref\": \"/Units/7567-5677-675675-97898\",
-            \"display\": \"New Controlling 4\"
+            \"resourceType\": \"Patched\",
+            \"NewPatched\": \"2010-01-23T04:56:22Z\",
+            \"location\": \"patched\"
         }
-    ]
     "
 );
 
 $jsonObject = json_decode(file_get_contents('./test.json'));
-$scimPatchRequest = ScimPatchRequest::forAdd('children', $childJson);
+$scimPatchRequest = ScimPatchRequest::forReplace('meta', $patchObject);
 $scimPatchService = new ScimPatchService();
 $result = $scimPatchService->execute($scimPatchRequest, $jsonObject);
 
-var_dump($result->children);
+var_dump($result->meta);

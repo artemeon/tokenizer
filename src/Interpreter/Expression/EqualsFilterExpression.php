@@ -6,6 +6,7 @@ namespace Artemeon\Tokenizer\Interpreter\Expression;
 
 use Artemeon\Tokenizer\Interpreter\JsonNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
+use Artemeon\Tokenizer\Interpreter\ScimException;
 
 class EqualsFilterExpression implements Expression
 {
@@ -28,26 +29,34 @@ class EqualsFilterExpression implements Expression
     {
         $data = &$context->getCurrentData();
 
-        if (is_array($data)) {
-            foreach ($data as $index => &$row) {
-                $this->valueExpression->interpret($context);
-                $needle = $context->getExpressionResult($this->valueExpression);
-
-                if (property_exists($row, $this->attribute)) {
-                    $propertyValue = $row->{$this->attribute};
-
-                    if ($propertyValue == $needle) {
-                        if ($context->isLastExpression($this)) {
-                            $context->setFoundNode(JsonNode::fromArray($data, $index));
-                            return;
-                        }
-
-                        $context->setCurrentData($row);
-                        $context->setExpressionResult($this, $row);
-                        return;
-                    }
-                }
-            }
+        if (!is_array($data)) {
+            throw ScimException::forInvalidValue('ScimPatch:path', "Filter target must be array" . $this->attribute);
         }
+
+        foreach ($data as $index => &$row) {
+            $this->valueExpression->interpret($context);
+            $needle = $context->getExpressionResult($this->valueExpression);
+
+            if (!property_exists($row, $this->attribute)) {
+                throw ScimException::forNoTarget($this->attribute);
+            }
+
+            $propertyValue = $row->{$this->attribute};
+
+            if ($propertyValue != $needle) {
+                continue;
+            }
+
+            if ($context->isLastExpression($this)) {
+                $context->setFoundNode(JsonNode::fromArray($data, $index));
+                return;
+            }
+
+            $context->setCurrentData($row);
+            $context->setExpressionResult($this, $row);
+            return;
+        }
+
+        throw ScimException::forNoTarget($this->attribute);
     }
 }

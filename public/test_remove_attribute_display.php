@@ -11,7 +11,7 @@ require '../vendor/autoload.php';
 require './Parser.php';
 
 $jsonObject = json_decode(file_get_contents('./test.json'));
-$scimPatchRequest = ScimPatchRequest::forRemove('children[value eq "3459c223-6f76-453a-919d-413861904646"].display');
+$scimPatchRequest = ScimPatchRequest::forRemove('children[value eq "75679c223-6f76-4756-919d-41386"].display');
 $scimPatchService = new ScimPatchService();
 $result = $scimPatchService->execute($scimPatchRequest, $jsonObject);
 

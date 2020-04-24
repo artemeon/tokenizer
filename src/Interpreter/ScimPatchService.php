@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use App\Parser;
+use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Interpreter\Operation\AddOperation;
 use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
@@ -33,8 +35,9 @@ class ScimPatchService
     }
 
     /**
-     * @throws Exception\UnexpectedTokenException
-     * @throws Exception\UnexpectedTokenValueException
+     * Execute the given scim patch on the given stdClass
+     *
+     * @throws ScimException
      */
     public function execute(ScimPatchRequest $scimPatch, stdClass $jsonObject): stdClass
     {
@@ -51,39 +54,50 @@ class ScimPatchService
     }
 
     /**
-     * @param ScimPatchRequest $scimPatch
-     * @return Operation
+     * Factory method for the requested operation
+     *
+     * @throws ScimException
      */
     private function getOperation(ScimPatchRequest $scimPatch): Operation
     {
         switch ($scimPatch->getOp()) {
-            case 'add':
-                return new AddOperation($scimPatch->getValue());
-            case 'replace':
-                return new ReplaceOperation($scimPatch->getValue());
-            case 'remove':
-                return new RemoveOperation();
+            case AddOperation::NAME:
+                $operation = new AddOperation($scimPatch->getValue());
+                break;
+            case ReplaceOperation::NAME:
+                $operation = new ReplaceOperation($scimPatch->getValue());
+                break;
+            case RemoveOperation::NAME:
+                $operation = new RemoveOperation();
+                break;
+            default:
+                throw ScimException::forInvalidValue('op', $scimPatch->getOp());
         }
+
+        return $operation;
     }
 
     /**
-     * @param ScimPatchRequest $scimPatch
-     * @param stdClass $jsonObject
-     * @return array
-     * @throws Exception\UnexpectedTokenException
-     * @throws Exception\UnexpectedTokenValueException
+     *
+     * @throws ScimException
      */
     private function getJsonNode(ScimPatchRequest $scimPatch, stdClass &$jsonObject): JsonNode
     {
-        if ($scimPatch->hasPath()) {
+        // If path is omitted use complete jason object
+        if (!$scimPatch->hasPath()) {
+            return JsonNode::fromObject($jsonObject, '');
+        }
+
+        // Interpret the given path an return found node
+        try {
             $context = new ScimContext($jsonObject);
             $tokenStream = $this->lexer->getTokenStreamFromString($scimPatch->getPath());
             $syntaxTree = Parser::fromTokenStream($tokenStream)->parse();
             $syntaxTree->interpret($context);
 
             return $context->getJsonNode();
+        } catch (UnexpectedTokenException | UnexpectedTokenValueException $e) {
+            throw ScimException::forInvalidPath($scimPatch->getPath(), $e->getToken()->getCharacterPosition());
         }
-
-        return JsonNode::fromObject($jsonObject, '');
     }
 }
