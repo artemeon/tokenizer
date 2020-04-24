@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Exception;
 
-use Artemeon\Tokenizer\Interpreter\Token;
+
+use Artemeon\Tokenizer\Tokenizer\Token;
 
 class UnexpectedTokenValueException extends TokenizerException implements TokenException
 {

@@ -31,7 +31,7 @@ class SubAttributeExpression implements Expression
         }
 
         if (!property_exists($data, $this->name)) {
-            throw new ScimException("Missing sub property:" . $this->name);
+            throw ScimException::forNoTarget($this->name);
         }
 
         $propertyValue = &$data->{$this->name};

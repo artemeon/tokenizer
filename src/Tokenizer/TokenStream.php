@@ -148,7 +148,7 @@ class TokenStream implements Iterator
             return false;
         }
 
-        return $current->getType() === $type && $current->getValue();
+        return $current->getType() === $type && $current->getValue() === $value;
     }
 
     /**

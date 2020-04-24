@@ -115,7 +115,7 @@ class JsonNode
     {
         if (is_array($this->data)) {
             return true;
-        };
+        }
 
         if (property_exists($this->data, $this->targetName)) {
             return is_array($this->getTargetValue());
