@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use App\Parser;
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Interpreter\Operation\AddOperation;
 use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
 use Artemeon\Tokenizer\Interpreter\Operation\ReplaceOperation;
+use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Tokenizer\Lexer;
 use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
 use stdClass;
@@ -78,6 +78,7 @@ class ScimPatchService
     }
 
     /**
+     * Find the target location (node) from the given stdClass based on the scim patch path
      *
      * @throws ScimException
      */

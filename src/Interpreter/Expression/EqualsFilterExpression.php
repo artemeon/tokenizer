@@ -43,18 +43,16 @@ class EqualsFilterExpression implements Expression
 
             $propertyValue = $row->{$this->attribute};
 
-            if ($propertyValue != $needle) {
-                continue;
-            }
+            if ($propertyValue == $needle) {
+                if ($context->isLastExpression($this)) {
+                    $context->setFoundNode(JsonNode::fromArray($data, $index));
+                    return;
+                }
 
-            if ($context->isLastExpression($this)) {
-                $context->setFoundNode(JsonNode::fromArray($data, $index));
+                $context->setCurrentData($row);
+                $context->setExpressionResult($this, $row);
                 return;
             }
-
-            $context->setCurrentData($row);
-            $context->setExpressionResult($this, $row);
-            return;
         }
 
         throw ScimException::forNoTarget($this->attribute);

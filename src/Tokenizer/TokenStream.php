@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Tokenizer;
 
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
+use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
 use Iterator;
 use SplDoublyLinkedList;
 
