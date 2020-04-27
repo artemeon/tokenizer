@@ -9,13 +9,14 @@ use Artemeon\Tokenizer\Interpreter\Expression\EqualsFilterExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use Artemeon\Tokenizer\Interpreter\Expression\StringExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\SubAttributeExpression;
-use Artemeon\Tokenizer\Interpreter\ScimSyntaxTree;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
-use Artemeon\Tokenizer\Interpreter\ScimGrammar;
 use Artemeon\Tokenizer\Tokenizer\Token;
 use Artemeon\Tokenizer\Tokenizer\TokenStream;
 
+/**
+ * ScimParser to parse the given TokenStream and translate it to a abstract syntax tree
+ */
 class ScimParser
 {
     /** @var TokenStream */
@@ -38,7 +39,8 @@ class ScimParser
     }
 
     /**
-     * @return Expression[]
+     * Parse the given TokenStream
+     *
      * @throws UnexpectedTokenValueException
      * @throws UnexpectedTokenException
      * @throws ScimException
@@ -70,6 +72,8 @@ class ScimParser
     }
 
     /**
+     * Parse the filter token sequence
+     *
      * @throws UnexpectedTokenException
      * @throws UnexpectedTokenValueException
      * @throws ScimException
@@ -80,13 +84,15 @@ class ScimParser
 
         $attributeToken = $this->tokenStream->expectType(ScimGrammar::TYPE_ATTRIBUTE);
         $operatorToken = $this->tokenStream->expectTypeAndValue(ScimGrammar::TYPE_OPERATOR_EQUALS, 'eq');
-        $valueToken = $this->tokenStream->expectType(ScimGrammar::TYPE_STRING);
+        $valueToken = $this->tokenStream->expectTypeIsOneOf(ScimGrammar::ARR_ALLOWED_FILTER_VALUES);
         $valueExpression = new StringExpression($valueToken->getValue());
 
         return $this->parseOperatorToken($operatorToken, $attributeToken, $valueExpression);
     }
 
     /**
+     * Parse operator tokens
+     *
      * @throws ScimException
      */
     private function parseOperatorToken(

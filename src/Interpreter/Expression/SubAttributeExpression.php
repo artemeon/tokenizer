@@ -26,7 +26,7 @@ class SubAttributeExpression implements Expression
         $data = &$context->getCurrentData();
 
         if ($context->isLastExpression($this)) {
-            $context->setFoundNode(StdClassNode::fromObject($data, $this->name));
+            $context->setNode(StdClassNode::fromObject($data, $this->name));
             return;
         }
 

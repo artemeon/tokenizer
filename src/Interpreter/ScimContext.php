@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
-use Artemeon\Tokenizer\Interpreter\Node\ArrayNode;
 use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Tokenizer\Context;
 use stdClass;
 
+/**
+ * ScimContext class based on the interpreter patten
+ */
 class ScimContext extends Context
 {
     /** @var stdClass */
-    private $jsonData;
+    private $jsonObject;
 
     /** @var mixed */
     private $currentData;
@@ -21,39 +23,36 @@ class ScimContext extends Context
     /** @var Expression */
     private $lastExpression;
 
-    /** @var ArrayNode */
+    /** @var Node */
     private $jsonNode;
 
     public function __construct(stdClass $jsonObject)
     {
-        $this->jsonData = $jsonObject;
-        $this->currentData = $this->jsonData;
+        $this->jsonObject = $jsonObject;
+        $this->currentData = $this->jsonObject;
 
         parent::__construct();
     }
 
     /**
-     * @return ArrayNode
+     * Return the node previously set by the last Expression
      */
-    public function getJsonNode(): Node
+    public function getNode(): Node
     {
         return $this->jsonNode;
     }
 
-    public function setFoundNode(Node $jsonNode)
+    /**
+     * Sets the found note
+     */
+    public function setNode(Node $jsonNode): void
     {
         $this->jsonNode = $jsonNode;
     }
 
     /**
-     * @return stdClass
-     */
-    public function getJsonData(): stdClass
-    {
-        return $this->jsonData;
-    }
-
-    /**
+     * Return the current data reference, set by the previous Expression
+     *
      * @return mixed
      */
     public function &getCurrentData()
@@ -62,6 +61,8 @@ class ScimContext extends Context
     }
 
     /**
+     * Set the current data reference
+     *
      * @param mixed $currentData
      */
     public function setCurrentData(&$currentData): void
@@ -70,7 +71,7 @@ class ScimContext extends Context
     }
 
     /**
-     * @return Expression
+     * Checks if the given Expression is the last Expression
      */
     public function isLastExpression(Expression $expression): bool
     {
@@ -78,7 +79,7 @@ class ScimContext extends Context
     }
 
     /**
-     * @param Expression $lastExpression
+     * Set the last Expression from the syntax tree
      */
     public function setLastExpression(Expression $lastExpression): void
     {

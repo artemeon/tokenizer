@@ -107,7 +107,7 @@ class Lexer
     /**
      * Creates and add a token to the internal stack
      */
-    private function addToken($name, LineParser $lineParser): void
+    private function addToken(string $name, LineParser $lineParser): void
     {
         $this->parsedTokens[] = new Token(
             $name,

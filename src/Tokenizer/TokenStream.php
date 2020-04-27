@@ -49,6 +49,7 @@ class TokenStream implements Iterator
 
     /**
      * Looks ahead from the current positions and returns the token
+     * without modifying the index
      */
     public function lookAhead($index = 1): ?Token
     {
@@ -71,7 +72,7 @@ class TokenStream implements Iterator
     {
         $token = $this->current();
 
-        if ($token->getType() !== $expectedType) {
+        if (!$this->checkType($expectedType)) {
             throw UnexpectedTokenException::fromToken($token);
         }
 
@@ -83,6 +84,7 @@ class TokenStream implements Iterator
      * Return the current token and throws an exception if the token type
      * and value does not match the given type and value
      *
+     * @param mixed $expectedValue
      * @throws UnexpectedTokenException
      * @throws UnexpectedTokenValueException
      */
@@ -103,22 +105,18 @@ class TokenStream implements Iterator
     }
 
     /**
-     * Return the current token and throws an exception if the token type
-     * and value does not match the given type and one of the expected values
+     * Returns the current token and throws an exception if the token type
+     * does not match on of the given expected types
      *
+     * @param string[] $expectedTypes
      * @throws UnexpectedTokenException
-     * @throws UnexpectedTokenValueException
      */
-    public function expectTypeAndValueIsOneOf(string $expectedType, array $expectedValues): Token
+    public function expectTypeIsOneOf(array $expectedTypes): Token
     {
         $token = $this->current();
 
-        if ($token->getType() !== $expectedType) {
+        if (!in_array($token->getType(), $expectedTypes)) {
             throw UnexpectedTokenException::fromToken($token);
-        }
-
-        if (!in_array($token->getValue(), $expectedValues)) {
-            throw UnexpectedTokenValueException::fromToken($token);
         }
 
         $this->next();
@@ -130,39 +128,45 @@ class TokenStream implements Iterator
      */
     public function checkType(string $type): bool
     {
-        if ($this->tokenList->current() === null) {
+        $token = $this->current();
+
+        if ($token === null) {
             return false;
         }
 
-        return $this->current()->getType() === $type;
+        return $token->getType() === $type;
     }
 
     /**
      * Checks the type and the value of the current token
+     *
+     * @param mixed $value
      */
     public function checkTypeAndValue(string $type, $value): bool
     {
-        $current = $this->current();
+        $token = $this->current();
 
-        if ($current === null) {
+        if ($token === null) {
             return false;
         }
 
-        return $current->getType() === $type && $current->getValue() === $value;
+        return $token->getType() === $type && $token->getValue() === $value;
     }
 
     /**
      * Checks the type and if one of the given values matches the token value
+     *
+     * @param string[] $types
      */
-    public function checkTypeAndValueIsOneOf(string $type, array $values): bool
+    public function checkTypeIsOneOf(array $types): bool
     {
-        $current = $this->current();
+        $token = $this->current();
 
-        if ($current === null) {
+        if ($token === null) {
             return false;
         }
 
-        return $current->getType() === $type && in_array($current->getValue(), $values);
+        return in_array($token->getValue(), $types);
     }
 
     /**

@@ -13,7 +13,6 @@ use Artemeon\Tokenizer\Interpreter\Operation\ReplaceOperation;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Tokenizer\Lexer;
-use Artemeon\Tokenizer\Interpreter\ScimGrammar;
 use stdClass;
 
 /**
@@ -86,7 +85,7 @@ class ScimPatchService
             $syntaxTree = ScimParser::fromTokenStream($tokenStream)->parse();
             $syntaxTree->interpret($context);
 
-            return $context->getJsonNode();
+            return $context->getNode();
         } catch (UnexpectedTokenException | UnexpectedTokenValueException $e) {
             throw ScimException::forInvalidPath($scimPatch->getPath(), $e->getToken()->getCharacterPosition());
         }

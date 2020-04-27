@@ -45,7 +45,7 @@ class EqualsFilterExpression implements Expression
 
             if ($propertyValue == $needle) {
                 if ($context->isLastExpression($this)) {
-                    $context->setFoundNode(ArrayNode::fromArray($data, $index));
+                    $context->setNode(ArrayNode::fromArray($data, $index));
                     return;
                 }
 

@@ -29,19 +29,32 @@ class ScimPatch
         $this->value = $value;
     }
 
+    /**
+     * Named constructor to create an instance for add operations
+     *
+     * @param mixed $value
+     */
     public static function forAdd(string $path, $value)
     {
         return new self(AddOperation::NAME, $path, $value);
     }
 
+    /**
+     * Named constructor to create an instance for replace operations
+     *
+     * @param mixed $value
+     */
     public static function forReplace(string $path, $value)
     {
         return new self(ReplaceOperation::NAME, $path, $value);
     }
 
-    public static function forRemove($path)
+    /**
+     * Named constructor to create an instance for remove operations
+     */
+    public static function forRemove(string $path)
     {
-        return new self(RemoveOperation::NAME, $path, '');
+        return new self(RemoveOperation::NAME, $path, null);
     }
 
     public function getOp(): string

@@ -9,8 +9,8 @@ use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 /**
  * Class for filtered results.
  *
- * Contains the unfiltered data (array) an a reference (index) to the data
- * targeted by the filter
+ * Contains the unfiltered data (array) and the array index (reference)
+ * computed by a filter Expression object
  */
 class ArrayNode implements Node
 {
@@ -28,6 +28,8 @@ class ArrayNode implements Node
 
     /**
      * Named constructor to create an instance based on the given array
+     *
+     * @param mixed[] $data
      */
     public static function fromArray(array &$data, int $index): self
     {

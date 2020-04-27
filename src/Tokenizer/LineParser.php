@@ -50,7 +50,7 @@ class LineParser
     }
 
     /**
-     * Applys the given pattern and   on the string
+     * Apply's the given pattern on the current line string
      */
     public function applyPattern(string $pattern): bool
     {
