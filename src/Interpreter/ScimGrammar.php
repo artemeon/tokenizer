@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer;
+namespace Artemeon\Tokenizer\Interpreter;
+
+use Artemeon\Tokenizer\Tokenizer\Grammar;
 
 class ScimGrammar extends Grammar
 {

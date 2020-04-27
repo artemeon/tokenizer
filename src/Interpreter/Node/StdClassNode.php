@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Node;
 
+use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 use stdClass;
 
-class ObjectNode implements Node
+class StdClassNode implements Node
 {
     /** @var mixed */
     private $data;
@@ -53,7 +54,7 @@ class ObjectNode implements Node
      */
     public function &getTarget()
     {
-        if ($this->property === '') {
+        if (!$this->hasIndex()) {
             return null;
         }
 
@@ -63,11 +64,14 @@ class ObjectNode implements Node
     /**
      * @inheritDoc
      */
-    public function &getData()
+    public function &getData(): stdClass
     {
         return $this->data;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getIndex(): string
     {
         return $this->property;
@@ -76,12 +80,14 @@ class ObjectNode implements Node
     /**
      * @inheritDoc
      */
-    public function isArray(): bool
+    public function getDataType(): string
     {
+        // If no reference to the target data exist we are use stdClass
         if (!$this->targetExists()) {
-            return false;
+            return Operation::TYPE_STD_CLASS;
         }
 
-        return is_array($this->getTarget());
+        // Resolve type of target data and determine operation type
+        return is_array($this->getTarget()) ? Operation::TYPE_ARRAY : Operation::TYPE_STD_CLASS;
     }
 }

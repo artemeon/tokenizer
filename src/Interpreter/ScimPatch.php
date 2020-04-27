@@ -4,7 +4,14 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
-class ScimPatchRequest
+use Artemeon\Tokenizer\Interpreter\Operation\AddOperation;
+use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
+use Artemeon\Tokenizer\Interpreter\Operation\ReplaceOperation;
+
+/**
+ * DTO to execute scim patch request
+ */
+class ScimPatch
 {
     /** @var string */
     private $op;
@@ -24,17 +31,17 @@ class ScimPatchRequest
 
     public static function forAdd(string $path, $value)
     {
-        return new self('add', $path, $value);
+        return new self(AddOperation::NAME, $path, $value);
     }
 
     public static function forReplace(string $path, $value)
     {
-        return new self('replace', $path, $value);
+        return new self(ReplaceOperation::NAME, $path, $value);
     }
 
     public static function forRemove($path)
     {
-        return new self('remove', $path, '');
+        return new self(RemoveOperation::NAME, $path, '');
     }
 
     public function getOp(): string

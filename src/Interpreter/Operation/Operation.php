@@ -7,17 +7,49 @@ namespace Artemeon\Tokenizer\Interpreter\Operation;
 use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
-interface Operation
+/**
+ * Base class for al scim operations
+ *
+ * Detects the data type of the node and calls matching process method
+ */
+abstract class Operation
 {
-    /**
-     * @param Node $jsonNode
-     * @throws ScimException
-     */
-    public function processArray(Node $jsonNode);
+    /** @var string  */
+    public const TYPE_ARRAY = 'array';
+
+    /** @var string  */
+    public const TYPE_STD_CLASS = 'object;';
 
     /**
-     * @param Node $jsonNode
+     * Process the given node based on their data type
+     *
      * @throws ScimException
      */
-    public function processObject(Node $jsonNode);
+    public final function process(Node $jsonNode):void
+    {
+        switch ($jsonNode->getDataType()) {
+            case self::TYPE_ARRAY:
+                $this->processArray($jsonNode);
+                break;
+            case self::TYPE_STD_CLASS:
+                $this->processObject($jsonNode);
+                break;
+            default:
+                throw ScimException::forInvalidValue('Node', 'Data type not supported');
+        }
+    }
+
+    /**
+     * Process node witch contains array data
+     *
+     * @throws ScimException
+     */
+    abstract protected function processArray(Node $jsonNode): void;
+
+    /**
+     * Process data which contains stdClass data
+     *
+     * @throws ScimException
+     */
+    abstract protected function processObject(Node $jsonNode): void;
 }

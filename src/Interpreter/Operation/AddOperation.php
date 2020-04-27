@@ -6,8 +6,9 @@ namespace Artemeon\Tokenizer\Interpreter\Operation;
 
 use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Interpreter\ScimException;
+use stdClass;
 
-class AddOperation implements Operation
+class AddOperation extends Operation
 {
     /** @var mixed */
     private $value;
@@ -23,7 +24,7 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArray(Node $jsonNode)
+    protected function processArray(Node $jsonNode): void
     {
         $target = &$jsonNode->getTarget();
 
@@ -41,7 +42,7 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObject(Node $jsonNode)
+    protected function processObject(Node $jsonNode): void
     {
         // If the target location specifies a single-valued attribute, the existing value is replaced.
         // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
@@ -69,7 +70,7 @@ class AddOperation implements Operation
      *
      * @throws ScimException
      */
-    private function mergeComplexType(&$target): object
+    private function mergeComplexType(stdClass &$target): stdClass
     {
         // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if (!is_object($this->value)) {

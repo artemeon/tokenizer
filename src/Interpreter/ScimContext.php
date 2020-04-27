@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
-use Artemeon\Tokenizer\Interpreter\Node\FilterNode;
+use Artemeon\Tokenizer\Interpreter\Node\ArrayNode;
 use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Tokenizer\Context;
 use stdClass;
@@ -21,7 +21,7 @@ class ScimContext extends Context
     /** @var Expression */
     private $lastExpression;
 
-    /** @var FilterNode */
+    /** @var ArrayNode */
     private $jsonNode;
 
     public function __construct(stdClass $jsonObject)
@@ -33,7 +33,7 @@ class ScimContext extends Context
     }
 
     /**
-     * @return FilterNode
+     * @return ArrayNode
      */
     public function getJsonNode(): Node
     {

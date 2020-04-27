@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Interpreter\Expression;
+namespace Artemeon\Tokenizer\Interpreter;
 
-use Artemeon\Tokenizer\Interpreter\ScimContext;
+use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 
-class SyntaxTree implements Expression
+class ScimSyntaxTree implements Expression
 {
     /** @var Expression[] */
     private $expressions;

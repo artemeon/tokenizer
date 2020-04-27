@@ -9,10 +9,10 @@ use Artemeon\Tokenizer\Interpreter\Expression\EqualsFilterExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use Artemeon\Tokenizer\Interpreter\Expression\StringExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\SubAttributeExpression;
-use Artemeon\Tokenizer\Interpreter\Expression\SyntaxTree;
+use Artemeon\Tokenizer\Interpreter\ScimSyntaxTree;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
-use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
+use Artemeon\Tokenizer\Interpreter\ScimGrammar;
 use Artemeon\Tokenizer\Tokenizer\Token;
 use Artemeon\Tokenizer\Tokenizer\TokenStream;
 
@@ -43,7 +43,7 @@ class ScimParser
      * @throws UnexpectedTokenException
      * @throws ScimException
      */
-    public function parse(): SyntaxTree
+    public function parse(): ScimSyntaxTree
     {
         while ($this->tokenStream->valid()) {
             $token = $this->tokenStream->current();
@@ -66,7 +66,7 @@ class ScimParser
             }
         }
 
-        return SyntaxTree::fromArray($this->expressions);
+        return ScimSyntaxTree::fromArray($this->expressions);
     }
 
     /**

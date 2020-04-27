@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Node\Node;
-use Artemeon\Tokenizer\Interpreter\Node\ObjectNode;
+use Artemeon\Tokenizer\Interpreter\Node\StdClassNode;
 use Artemeon\Tokenizer\Interpreter\Operation\AddOperation;
 use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
@@ -13,9 +13,12 @@ use Artemeon\Tokenizer\Interpreter\Operation\ReplaceOperation;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
 use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Tokenizer\Lexer;
-use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
+use Artemeon\Tokenizer\Interpreter\ScimGrammar;
 use stdClass;
 
+/**
+ * Domain service to process scim patch request
+ */
 class ScimPatchService
 {
     /** @var Lexer */
@@ -31,16 +34,11 @@ class ScimPatchService
      *
      * @throws ScimException
      */
-    public function execute(ScimPatchRequest $scimPatch, stdClass $jsonObject): stdClass
+    public function execute(ScimPatch $scimPatch, stdClass $jsonObject): stdClass
     {
         $jsonNode = $this->getNode($scimPatch, $jsonObject);
         $scimOperation = $this->getOperation($scimPatch);
-
-        if ($jsonNode->isArray()) {
-            $scimOperation->processArray($jsonNode);
-        } else {
-            $scimOperation->processObject($jsonNode);
-        }
+        $scimOperation->process($jsonNode);
 
         return $jsonObject;
     }
@@ -50,7 +48,7 @@ class ScimPatchService
      *
      * @throws ScimException
      */
-    private function getOperation(ScimPatchRequest $scimPatch): Operation
+    private function getOperation(ScimPatch $scimPatch): Operation
     {
         switch ($scimPatch->getOp()) {
             case AddOperation::NAME:
@@ -74,11 +72,11 @@ class ScimPatchService
      *
      * @throws ScimException
      */
-    private function getNode(ScimPatchRequest $scimPatch, stdClass &$jsonObject): Node
+    private function getNode(ScimPatch $scimPatch, stdClass &$jsonObject): Node
     {
         // If path is omitted use complete object
         if (!$scimPatch->hasPath()) {
-            return ObjectNode::fromObject($jsonObject, '');
+            return StdClassNode::fromObject($jsonObject, '');
         }
 
         // Interpret the given path an return found node

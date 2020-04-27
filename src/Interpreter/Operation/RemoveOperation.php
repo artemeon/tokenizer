@@ -7,7 +7,7 @@ namespace Artemeon\Tokenizer\Interpreter\Operation;
 use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
-class RemoveOperation implements Operation
+class RemoveOperation extends Operation
 {
     /** @var string */
     public const NAME = 'remove';
@@ -15,7 +15,7 @@ class RemoveOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArray(Node $jsonNode)
+    protected function processArray(Node $jsonNode): void
     {
         if (!$jsonNode->targetExists()) {
             return;
@@ -44,7 +44,7 @@ class RemoveOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObject(Node $jsonNode)
+    protected function processObject(Node $jsonNode): void
     {
         if (!$jsonNode->targetExists()) {
             return;

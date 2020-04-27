@@ -4,9 +4,17 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Node;
 
-class FilterNode implements Node
+use Artemeon\Tokenizer\Interpreter\Operation\Operation;
+
+/**
+ * Class for filtered results.
+ *
+ * Contains the unfiltered data (array) an a reference (index) to the data
+ * targeted by the filter
+ */
+class ArrayNode implements Node
 {
-    /** @var mixed */
+    /** @var array */
     private $data;
 
     /** @var mixed */
@@ -39,6 +47,10 @@ class FilterNode implements Node
      */
     public function &getTarget()
     {
+        if (!$this->targetExists()) {
+            return null;
+        }
+
         return $this->data[$this->index];
     }
 
@@ -46,7 +58,7 @@ class FilterNode implements Node
      * @inheritDoc
      */
 
-    public function &getData()
+    public function &getData(): array
     {
         return $this->data;
     }
@@ -54,9 +66,9 @@ class FilterNode implements Node
     /**
      * @inheritDoc
      */
-    public function isArray(): bool
+    public function getDataType(): string
     {
-        return true;
+        return Operation::TYPE_ARRAY;
     }
 
     /**

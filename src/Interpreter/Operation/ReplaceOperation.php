@@ -6,8 +6,9 @@ namespace Artemeon\Tokenizer\Interpreter\Operation;
 
 use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Interpreter\ScimException;
+use stdClass;
 
-class ReplaceOperation implements Operation
+class ReplaceOperation extends Operation
 {
     /** @var mixed */
     private $value;
@@ -23,7 +24,7 @@ class ReplaceOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArray(Node $jsonNode)
+    protected function processArray(Node $jsonNode): void
     {
         // If the target location is a multi-valued attribute and no filter is specified, the attribute
         // and all values are replaced. If the target location is a multi-valued attribute and a value
@@ -39,7 +40,7 @@ class ReplaceOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObject(Node $jsonNode)
+    protected function processObject(Node $jsonNode): void
     {
         // If the target location is a single-value attribute, the attributes value is replaced.
         // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
@@ -61,7 +62,7 @@ class ReplaceOperation implements Operation
      *
      * @throws ScimException
      */
-    private function mergeComplexType(&$target): object
+    private function mergeComplexType(stdClass &$target): stdClass
     {
         // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if (!is_object($this->value)) {

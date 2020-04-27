@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Expression;
 
-use Artemeon\Tokenizer\Interpreter\Node\FilterNode;
+use Artemeon\Tokenizer\Interpreter\Node\ArrayNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
@@ -45,7 +45,7 @@ class EqualsFilterExpression implements Expression
 
             if ($propertyValue == $needle) {
                 if ($context->isLastExpression($this)) {
-                    $context->setFoundNode(FilterNode::fromArray($data, $index));
+                    $context->setFoundNode(ArrayNode::fromArray($data, $index));
                     return;
                 }
 
