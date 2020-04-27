@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Interpreter;
+namespace Artemeon\Tokenizer\Tokenizer;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use SplObjectStorage;

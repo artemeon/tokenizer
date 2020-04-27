@@ -8,7 +8,6 @@ use Artemeon\Tokenizer\Interpreter\ScimPatchRequest;
 use Artemeon\Tokenizer\Interpreter\ScimPatchService;
 
 require '../vendor/autoload.php';
-require './Parser.php';
 
 $jsonObject = json_decode(file_get_contents('./test.json'));
 $scimPatchRequest = ScimPatchRequest::forReplace('meta.resourceType', 'new_property_value');

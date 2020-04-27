@@ -1,19 +1,11 @@
 <?php
 
-/*
- * This file is part of the Artemeon Core - Web Application Framework.
- *
- * (c) Artemeon <www.artemeon.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
-use App\Parser;
+use Artemeon\Tokenizer\Interpreter\Node\Node;
+use Artemeon\Tokenizer\Interpreter\Node\ObjectNode;
 use Artemeon\Tokenizer\Interpreter\Operation\AddOperation;
 use Artemeon\Tokenizer\Interpreter\Operation\Operation;
 use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
@@ -41,15 +33,15 @@ class ScimPatchService
      */
     public function execute(ScimPatchRequest $scimPatch, stdClass $jsonObject): stdClass
     {
-        $jsonNode = $this->getJsonNode($scimPatch, $jsonObject);
+        $jsonNode = $this->getNode($scimPatch, $jsonObject);
         $scimOperation = $this->getOperation($scimPatch);
 
         if ($jsonNode->isArray()) {
             $scimOperation->processArray($jsonNode);
-            return $jsonObject;
+        } else {
+            $scimOperation->processObject($jsonNode);
         }
 
-        $scimOperation->processObject($jsonNode);
         return $jsonObject;
     }
 
@@ -78,22 +70,22 @@ class ScimPatchService
     }
 
     /**
-     * Find the target location (node) from the given stdClass based on the scim patch path
+     * Find the node (target location) from the given stdClass based on the scim patch path
      *
      * @throws ScimException
      */
-    private function getJsonNode(ScimPatchRequest $scimPatch, stdClass &$jsonObject): JsonNode
+    private function getNode(ScimPatchRequest $scimPatch, stdClass &$jsonObject): Node
     {
-        // If path is omitted use complete jason object
+        // If path is omitted use complete object
         if (!$scimPatch->hasPath()) {
-            return JsonNode::fromObject($jsonObject, '');
+            return ObjectNode::fromObject($jsonObject, '');
         }
 
         // Interpret the given path an return found node
         try {
             $context = new ScimContext($jsonObject);
             $tokenStream = $this->lexer->getTokenStreamFromString($scimPatch->getPath());
-            $syntaxTree = Parser::fromTokenStream($tokenStream)->parse();
+            $syntaxTree = ScimParser::fromTokenStream($tokenStream)->parse();
             $syntaxTree->interpret($context);
 
             return $context->getJsonNode();

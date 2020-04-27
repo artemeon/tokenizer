@@ -8,7 +8,6 @@ use Artemeon\Tokenizer\Interpreter\ScimPatchRequest;
 use Artemeon\Tokenizer\Interpreter\ScimPatchService;
 
 require '../vendor/autoload.php';
-require './Parser.php';
 
 $patchObject = json_decode(
     "

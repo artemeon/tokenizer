@@ -1,19 +1,10 @@
 <?php
 
-/*
- * This file is part of the Artemeon Core - Web Application Framework.
- *
- * (c) Artemeon <www.artemeon.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Operation;
 
-use Artemeon\Tokenizer\Interpreter\JsonNode;
+use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
 class AddOperation implements Operation
@@ -32,9 +23,9 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArray(JsonNode $jsonNode)
+    public function processArray(Node $jsonNode)
     {
-        $target = &$jsonNode->getTargetValue();
+        $target = &$jsonNode->getTarget();
 
         // For multi valued operations, the patch value must be an array
         if (!is_array($this->value)) {
@@ -50,20 +41,20 @@ class AddOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObject(JsonNode $jsonNode)
+    public function processObject(Node $jsonNode)
     {
         // If the target location specifies a single-valued attribute, the existing value is replaced.
         // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if ($jsonNode->targetExists()) {
-            $target = &$jsonNode->getTargetValue();
+            $target = &$jsonNode->getTarget();
             $target = is_object($this->value) ? $this->mergeComplexType($target) : $this->value;
             return;
         }
 
         // If the target location does not exist, the attribute and value are added.
-        if ($jsonNode->hasTargetName()) {
+        if ($jsonNode->hasIndex()) {
             $target = &$jsonNode->getData();
-            $target->{$jsonNode->getTargetName()} = $this->value;
+            $target->{$jsonNode->getIndex()} = $this->value;
             return;
         }
 
@@ -82,7 +73,7 @@ class AddOperation implements Operation
     {
         // If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified.
         if (!is_object($this->value)) {
-            throw ScimException::forInvalidValue('PatchOp:value','Complex value required');
+            throw ScimException::forInvalidValue('PatchOp:value', 'Complex value required');
         }
 
         return (object) array_merge((array) $target, (array) $this->value);

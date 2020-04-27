@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Interpreter;
+namespace Artemeon\Tokenizer\Interpreter\Expression;
 
-use Artemeon\Tokenizer\Interpreter\Expression\Expression;
+use Artemeon\Tokenizer\Interpreter\ScimContext;
 
 class SyntaxTree implements Expression
 {

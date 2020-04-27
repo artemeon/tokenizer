@@ -8,7 +8,6 @@ use Artemeon\Tokenizer\Interpreter\ScimPatchRequest;
 use Artemeon\Tokenizer\Interpreter\ScimPatchService;
 
 require '../vendor/autoload.php';
-require './Parser.php';
 
 $jsonObject = json_decode(file_get_contents('./test.json'));
 $scimPatchRequest = ScimPatchRequest::forRemove('children[value eq "75679c223-6f76-4756-919d-41386"].display');

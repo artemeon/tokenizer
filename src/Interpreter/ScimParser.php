@@ -1,30 +1,22 @@
 <?php
 
-/*
- * This file is part of the Artemeon\Tokenizer package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
-namespace App;
+namespace Artemeon\Tokenizer\Interpreter;
 
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Interpreter\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Interpreter\Expression\AttributeExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\EqualsFilterExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use Artemeon\Tokenizer\Interpreter\Expression\StringExpression;
 use Artemeon\Tokenizer\Interpreter\Expression\SubAttributeExpression;
-use Artemeon\Tokenizer\Interpreter\SyntaxTree;
+use Artemeon\Tokenizer\Interpreter\Expression\SyntaxTree;
+use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Tokenizer\ScimGrammar;
 use Artemeon\Tokenizer\Tokenizer\Token;
 use Artemeon\Tokenizer\Tokenizer\TokenStream;
-use Exception;
 
-class Parser
+class ScimParser
 {
     /** @var TokenStream */
     private $tokenStream;
@@ -49,6 +41,7 @@ class Parser
      * @return Expression[]
      * @throws UnexpectedTokenValueException
      * @throws UnexpectedTokenException
+     * @throws ScimException
      */
     public function parse(): SyntaxTree
     {
@@ -69,7 +62,7 @@ class Parser
                     $this->tokenStream->next();
                     break;
                 default:
-                    $this->tokenStream->next();
+                    UnexpectedTokenException::fromToken($token);
             }
         }
 
@@ -79,7 +72,7 @@ class Parser
     /**
      * @throws UnexpectedTokenException
      * @throws UnexpectedTokenValueException
-     * @throws Exception
+     * @throws ScimException
      */
     private function parseFilter(): Expression
     {
@@ -94,10 +87,7 @@ class Parser
     }
 
     /**
-     * @param Token $operatorToken
-     * @param Expression $attributeToken
-     * @param Expression $valueExpression
-     * @throws Exception
+     * @throws ScimException
      */
     private function parseOperatorToken(
         Token $operatorToken,
@@ -108,7 +98,7 @@ class Parser
             case ScimGrammar::TYPE_OPERATOR_EQUALS:
                 return new EqualsFilterExpression($attributeToken->getValue(), $valueExpression);
             default:
-                throw new Exception('Not supportet Operator');
+                throw ScimException::forInvalidValue($attributeToken->getValue(), 'Operator not supported');
         }
     }
 }

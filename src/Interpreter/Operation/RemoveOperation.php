@@ -1,19 +1,10 @@
 <?php
 
-/*
- * This file is part of the Artemeon Core - Web Application Framework.
- *
- * (c) Artemeon <www.artemeon.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Operation;
 
-use Artemeon\Tokenizer\Interpreter\JsonNode;
+use Artemeon\Tokenizer\Interpreter\Node\Node;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
 class RemoveOperation implements Operation
@@ -24,7 +15,7 @@ class RemoveOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processArray(JsonNode $jsonNode)
+    public function processArray(Node $jsonNode)
     {
         if (!$jsonNode->targetExists()) {
             return;
@@ -33,7 +24,7 @@ class RemoveOperation implements Operation
         // If the target location is a multi-valued attribute and no filter is specified,
         // the attribute and all values are removed
         if ($jsonNode->getIndex() === null) {
-            $target = &$jsonNode->getTargetValue();
+            $target = &$jsonNode->getTarget();
             $target = [];
 
             return;
@@ -53,7 +44,7 @@ class RemoveOperation implements Operation
     /**
      * @inheritDoc
      */
-    public function processObject(JsonNode $jsonNode)
+    public function processObject(Node $jsonNode)
     {
         if (!$jsonNode->targetExists()) {
             return;
@@ -63,6 +54,6 @@ class RemoveOperation implements Operation
         // associated value is removed
         $target = &$jsonNode->getData();
 
-        unset($target->{$jsonNode->getTargetName()});
+        unset($target->{$jsonNode->getIndex()});
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Expression;
 
+use Artemeon\Tokenizer\Interpreter\Node\ObjectNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Interpreter\ScimException;
-use Artemeon\Tokenizer\Interpreter\JsonNode;
 
 class AttributeExpression implements Expression
 {
@@ -26,7 +26,7 @@ class AttributeExpression implements Expression
         $data = &$context->getCurrentData();
 
         if ($context->isLastExpression($this)) {
-            $context->setFoundNode(JsonNode::fromObject($data, $this->name));
+            $context->setFoundNode(ObjectNode::fromObject($data, $this->name));
             return;
         }
 
@@ -35,7 +35,7 @@ class AttributeExpression implements Expression
         }
 
         $propertyValue = &$data->{$this->name};
-        $context->setExpressionResult($this, $propertyValue);
         $context->setCurrentData($propertyValue);
+        $context->setExpressionResult($this, $propertyValue);
     }
 }

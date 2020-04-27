@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter\Expression;
 
-use Artemeon\Tokenizer\Interpreter\JsonNode;
+use Artemeon\Tokenizer\Interpreter\Node\ObjectNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
@@ -26,7 +26,7 @@ class SubAttributeExpression implements Expression
         $data = &$context->getCurrentData();
 
         if ($context->isLastExpression($this)) {
-            $context->setFoundNode(JsonNode::fromObject($data, $this->name));
+            $context->setFoundNode(ObjectNode::fromObject($data, $this->name));
             return;
         }
 

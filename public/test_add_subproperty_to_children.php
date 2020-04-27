@@ -8,7 +8,6 @@ use Artemeon\Tokenizer\Interpreter\ScimPatchRequest;
 use Artemeon\Tokenizer\Interpreter\ScimPatchService;
 
 require '../vendor/autoload.php';
-require './Parser.php';
 
 $scimPatchRequest = ScimPatchRequest::forAdd(
     'children[value eq "3459c223-6f76-453a-919d-413861904646"].displayNew',

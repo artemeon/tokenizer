@@ -14,7 +14,7 @@ require '../vendor/autoload.php';
 require './Parser.php';
 
 $stream = Lexer::fromGrammar(new ScimGrammar())->getTokenStreamFromFile(new SplFileObject('./scim.txt'));
-$parser = Parser::fromTokenStream($stream);
+$parser = ScimParser::fromTokenStream($stream);
 
 $context = new ScimContext(file_get_contents('./test.json'));
 $syntaxTree = $parser->parse(new RemoveOperation());

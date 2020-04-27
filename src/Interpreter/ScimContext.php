@@ -1,19 +1,13 @@
 <?php
 
-/*
- * This file is part of the Artemeon Core - Web Application Framework.
- *
- * (c) Artemeon <www.artemeon.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
+use Artemeon\Tokenizer\Interpreter\Node\FilterNode;
+use Artemeon\Tokenizer\Interpreter\Node\Node;
+use Artemeon\Tokenizer\Tokenizer\Context;
 use stdClass;
 
 class ScimContext extends Context
@@ -27,7 +21,7 @@ class ScimContext extends Context
     /** @var Expression */
     private $lastExpression;
 
-    /** @var JsonNode */
+    /** @var FilterNode */
     private $jsonNode;
 
     public function __construct(stdClass $jsonObject)
@@ -39,14 +33,14 @@ class ScimContext extends Context
     }
 
     /**
-     * @return JsonNode
+     * @return FilterNode
      */
-    public function getJsonNode(): JsonNode
+    public function getJsonNode(): Node
     {
         return $this->jsonNode;
     }
 
-    public function setFoundNode(JsonNode $jsonNode)
+    public function setFoundNode(Node $jsonNode)
     {
         $this->jsonNode = $jsonNode;
     }
