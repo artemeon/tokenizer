@@ -9,7 +9,7 @@ use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 /**
  * Collection class for scim Expression classes
  */
-class ScimSyntaxTree implements Expression
+class SyntaxTree implements Expression
 {
     /** @var Expression[] */
     private $expressions;

@@ -8,6 +8,9 @@ use Artemeon\Tokenizer\Interpreter\Node\ArrayNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
+/**
+ * Expression for equals filter collections
+ */
 class EqualsFilterExpression implements Expression
 {
     /** @var string */

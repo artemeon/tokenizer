@@ -45,7 +45,7 @@ class ScimParser
      * @throws UnexpectedTokenException
      * @throws ScimException
      */
-    public function parse(): ScimSyntaxTree
+    public function parse(): SyntaxTree
     {
         while ($this->tokenStream->valid()) {
             $token = $this->tokenStream->current();
@@ -68,7 +68,7 @@ class ScimParser
             }
         }
 
-        return ScimSyntaxTree::fromArray($this->expressions);
+        return SyntaxTree::fromArray($this->expressions);
     }
 
     /**

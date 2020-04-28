@@ -8,6 +8,9 @@ use Artemeon\Tokenizer\Interpreter\Node\StdClassNode;
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 use Artemeon\Tokenizer\Interpreter\ScimException;
 
+/**
+ * Expression for sub-attributes of a stdClass
+ */
 class SubAttributeExpression implements Expression
 {
     /** @var string */

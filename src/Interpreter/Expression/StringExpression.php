@@ -6,6 +6,9 @@ namespace Artemeon\Tokenizer\Interpreter\Expression;
 
 use Artemeon\Tokenizer\Interpreter\ScimContext;
 
+/**
+ * Expression for string values
+ */
 class StringExpression implements Expression
 {
     /** @var string */

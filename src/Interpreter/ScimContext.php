@@ -6,13 +6,14 @@ namespace Artemeon\Tokenizer\Interpreter;
 
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 use Artemeon\Tokenizer\Interpreter\Node\Node;
-use Artemeon\Tokenizer\Tokenizer\Context;
+use SplObjectStorage;
 use stdClass;
+use UnexpectedValueException;
 
 /**
  * ScimContext class based on the interpreter patten
  */
-class ScimContext extends Context
+class ScimContext
 {
     /** @var stdClass */
     private $jsonObject;
@@ -26,12 +27,35 @@ class ScimContext extends Context
     /** @var Node */
     private $jsonNode;
 
+    /** @var SplObjectStorage */
+    protected $expressionStorage;
+
     public function __construct(stdClass $jsonObject)
     {
         $this->jsonObject = $jsonObject;
         $this->currentData = $this->jsonObject;
+        $this->expressionStorage = new SplObjectStorage();
+    }
 
-        parent::__construct();
+    /**
+     * Set the result value of the given Expression
+     *
+     * @param mixed $result
+     */
+    public function setExpressionResult(Expression $expression, $result): void
+    {
+        $this->expressionStorage->offsetSet($expression, $result);
+    }
+
+    /**
+     * Return the result value of the given expression
+     *
+     * @return mixed
+     * @throws UnexpectedValueException
+     */
+    public function getExpressionResult(Expression $expression)
+    {
+        return $this->expressionStorage->offsetGet($expression);
     }
 
     /**
