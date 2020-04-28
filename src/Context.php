@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer;
+namespace Artemeon\Tokenizer;
 
-use Artemeon\Tokenizer\Tokenizer\Expression\Expression;
+use Artemeon\Tokenizer\Expression\Expression;
 use SplObjectStorage;
 use UnexpectedValueException;
 

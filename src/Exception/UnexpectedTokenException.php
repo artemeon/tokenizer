@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer\Exception;
+namespace Artemeon\Tokenizer\Exception;
 
-use Artemeon\Tokenizer\Tokenizer\Token;
+use Artemeon\Tokenizer\Token;
 
 class UnexpectedTokenException extends TokenizerException implements TokenException
 {

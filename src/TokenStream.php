@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer;
+namespace Artemeon\Tokenizer;
 
-use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
+use Artemeon\Tokenizer\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Exception\UnexpectedTokenValueException;
 use Iterator;
 use SplDoublyLinkedList;
 

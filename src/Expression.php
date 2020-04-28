@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer\Expression;
+namespace Artemeon\Tokenizer\Expression;
 
-use Artemeon\Tokenizer\Tokenizer\Context;
+use Artemeon\Tokenizer\Context;
 
 interface Expression
 {
