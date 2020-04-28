@@ -40,14 +40,14 @@ abstract class Operation
     }
 
     /**
-     * Process node witch contains array data
+     * Process node's witch contains array data
      *
      * @throws ScimException
      */
     abstract protected function processArray(Node $jsonNode): void;
 
     /**
-     * Process data which contains stdClass data
+     * Process node's which contains stdClass data
      *
      * @throws ScimException
      */

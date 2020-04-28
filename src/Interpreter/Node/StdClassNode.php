@@ -82,7 +82,7 @@ class StdClassNode implements Node
      */
     public function getDataType(): string
     {
-        // If no reference to the target data exist we are use stdClass
+        // If no reference to the target data exist we use stdClass
         if (!$this->targetExists()) {
             return Operation::TYPE_STD_CLASS;
         }

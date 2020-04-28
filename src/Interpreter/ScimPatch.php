@@ -9,7 +9,7 @@ use Artemeon\Tokenizer\Interpreter\Operation\RemoveOperation;
 use Artemeon\Tokenizer\Interpreter\Operation\ReplaceOperation;
 
 /**
- * DTO to execute scim patch request
+ * DTO to execute scim patch requests
  */
 class ScimPatch
 {

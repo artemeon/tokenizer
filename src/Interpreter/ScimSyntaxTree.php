@@ -7,7 +7,7 @@ namespace Artemeon\Tokenizer\Interpreter;
 use Artemeon\Tokenizer\Interpreter\Expression\Expression;
 
 /**
- * Collection class for scim Expressions classes
+ * Collection class for scim Expression classes
  */
 class ScimSyntaxTree implements Expression
 {
@@ -37,6 +37,7 @@ class ScimSyntaxTree implements Expression
     {
         $lastIndex = max(array_keys($this->expressions));
         $lastExpression = $this->expressions[$lastIndex];
+
         $context->setLastExpression($lastExpression);
 
         foreach ($this->expressions as $expression) {

@@ -7,7 +7,7 @@ namespace Artemeon\Tokenizer\Interpreter;
 use Artemeon\Tokenizer\Tokenizer\Grammar;
 
 /**
- * Class to register scim grammar tokens
+ * Class to register all supported scim grammar tokens
  */
 class ScimGrammar extends Grammar
 {
