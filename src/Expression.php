@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Expression;
+namespace Artemeon\Tokenizer;
 
-use Artemeon\Tokenizer\Context;
-
+/**
+ * Example Expression interface as described in the interpreter pattern
+ */
 interface Expression
 {
-    public function interpret(Context $context);
+    /**
+     * Interpret current expression based on the given Context
+     */
+    public function interpret(Context $context): void;
 }

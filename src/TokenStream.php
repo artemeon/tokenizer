@@ -51,7 +51,7 @@ class TokenStream implements Iterator
      * Looks ahead from the current positions and returns the token
      * without modifying the index
      */
-    public function lookAhead($index = 1): ?Token
+    public function lookAhead(int $index = 1): ?Token
     {
         $index = $this->tokenList->key() + $index;
 
