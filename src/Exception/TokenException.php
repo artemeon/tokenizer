@@ -9,11 +9,14 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer\Exception;
+namespace Artemeon\Tokenizer\Exception;
 
-use Exception;
+use Artemeon\Tokenizer\Token;
 
-class TokenizerException extends Exception
+interface TokenException
 {
-
+    /**
+     * @return Token
+     */
+    public function getToken(): Token;
 }

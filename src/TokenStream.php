@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer;
+namespace Artemeon\Tokenizer;
 
-use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenException;
-use Artemeon\Tokenizer\Tokenizer\Exception\UnexpectedTokenValueException;
+use Artemeon\Tokenizer\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Exception\UnexpectedTokenValueException;
 use Iterator;
 use SplDoublyLinkedList;
 
@@ -51,7 +51,7 @@ class TokenStream implements Iterator
      * Looks ahead from the current positions and returns the token
      * without modifying the index
      */
-    public function lookAhead($index = 1): ?Token
+    public function lookAhead(int $index = 1): ?Token
     {
         $index = $this->tokenList->key() + $index;
 

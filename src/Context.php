@@ -9,14 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer;
+namespace Artemeon\Tokenizer;
 
-use Artemeon\Tokenizer\Tokenizer\Expression\Expression;
 use SplObjectStorage;
 use UnexpectedValueException;
 
 /**
- * Context base class as described in the interpreter pattern
+ * Example Context class as described in the interpreter pattern
  */
 class Context
 {

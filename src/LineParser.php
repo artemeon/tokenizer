@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Artemeon\Tokenizer\Tokenizer;
+namespace Artemeon\Tokenizer;
 
 /**
  * Class to apply regular expression on a line string
