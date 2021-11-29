@@ -15,8 +15,7 @@ use Artemeon\Tokenizer\Token;
 
 class UnexpectedTokenValueException extends TokenizerException implements TokenException
 {
-    /** @var Token */
-    private $token;
+    private Token $token;
 
     public function __construct(Token $token, string $message)
     {
@@ -27,15 +26,12 @@ class UnexpectedTokenValueException extends TokenizerException implements TokenE
     /**
      * Named constructor to create an instance based on the given token
      */
-    public static function fromToken(Token $token)
+    public static function fromToken(Token $token): self
     {
         $message = "Unexpected token value: " . $token->getValue();
         return new self($token, $message);
     }
 
-    /**
-     * @return Token
-     */
     public function getToken(): Token
     {
         return $this->token;

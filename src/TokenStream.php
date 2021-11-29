@@ -21,8 +21,7 @@ use SplDoublyLinkedList;
  */
 class TokenStream implements Iterator
 {
-    /** @var SplDoublyLinkedList */
-    private $tokenList;
+    private SplDoublyLinkedList $tokenList;
 
     public function __construct()
     {

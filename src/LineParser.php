@@ -16,23 +16,12 @@ namespace Artemeon\Tokenizer;
  */
 class LineParser
 {
-    /** @var string */
-    private $line;
-
-    /** @var int */
-    private $countUnparsedCharacters;
-
-    /** @var string */
-    private $match = "";
-
-    /** @var int */
-    private $lineNumber;
-
-    /** @var int */
-    private $characterPosition = 0;
-
-    /** @var int */
-    private $characterOffset = 0;
+    private string $line;
+    private int $countUnparsedCharacters;
+    private string $match = "";
+    private int $lineNumber;
+    private int $characterPosition = 0;
+    private int $characterOffset = 0;
 
     private function __construct(string $line, $number)
     {

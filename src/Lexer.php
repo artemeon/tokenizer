@@ -18,11 +18,10 @@ use SplFileObject;
  */
 class Lexer
 {
-    /** @var Grammar */
-    private $grammar;
+    private Grammar $grammar;
 
     /** @var Token[] */
-    private $parsedTokens = [];
+    private array $parsedTokens = [];
 
     private function __construct(Grammar $grammar)
     {

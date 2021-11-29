@@ -16,17 +16,10 @@ namespace Artemeon\Tokenizer;
  */
 class Token
 {
-    /** @var string */
-    private $type;
-
-    /** @var string */
-    private $value;
-
-    /** @var int */
-    private $lineNumber;
-
-    /** @var int */
-    private $characterPosition;
+    private string $type;
+    private string $value;
+    private int $lineNumber;
+    private int $characterPosition;
 
     public function __construct(string $name, string $value, int $lineNumber, int $position)
     {
