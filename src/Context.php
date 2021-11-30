@@ -19,8 +19,7 @@ use UnexpectedValueException;
  */
 class Context
 {
-    /** @var SplObjectStorage */
-    protected $expressionStorage;
+    protected SplObjectStorage $expressionStorage;
 
     public function __construct()
     {

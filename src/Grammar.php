@@ -20,14 +20,14 @@ use IteratorAggregate;
  */
 abstract class Grammar implements IteratorAggregate
 {
-    /** @var string[] */
-    protected $pattern = [];
-
-    /** @var string[] */
-    protected $ignoredTokenNames = [];
-
     /** @var string */
     public const UNMATCHED_KEY = 'UNMATCHED';
+
+    /** @var string[] */
+    protected array $pattern = [];
+
+    /** @var string[] */
+    protected array $ignoredTokenNames = [];
 
     public function __construct()
     {
