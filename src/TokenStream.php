@@ -140,8 +140,6 @@ class TokenStream implements Iterator
 
     /**
      * Checks the type and the value of the current token
-     *
-     * @param mixed $value
      */
     public function checkTypeAndValue(string $type, mixed $value): bool
     {
@@ -167,7 +165,7 @@ class TokenStream implements Iterator
             return false;
         }
 
-        return in_array($token->getValue(), $types);
+        return in_array($token->getType(), $types);
     }
 
     /**
@@ -197,7 +195,7 @@ class TokenStream implements Iterator
     /**
      * @inheritDoc
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->tokenList->key();
     }
