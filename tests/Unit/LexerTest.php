@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer\Tests\Unit;
 
+use Artemeon\Tokenizer\Exception\UnexpectedEndOfTokenStreamException;
 use Artemeon\Tokenizer\Exception\UnexpectedTokenException;
+use Artemeon\Tokenizer\Exception\UnexpectedTokenValueException;
 use Artemeon\Tokenizer\Lexer;
 use Artemeon\Tokenizer\Token;
 use PHPUnit\Framework\TestCase;
@@ -120,6 +122,26 @@ class LexerTest extends TestCase
         $this->expectException(UnexpectedTokenException::class);
         $tokenStream = $this->lexer->getTokenStreamFromString('members eq 10');
         $tokenStream->expectTypeIsOneOf([TestGrammar::TYPE_WHITESPACE, TestGrammar::TYPE_OPERATOR_EQUALS]);
+    }
+
+    public function testExpectWillThrowEndOfTokenStreamReachedException(): void
+    {
+        $this->expectException(UnexpectedEndOfTokenStreamException::class);
+        $tokenStream = $this->lexer->getTokenStreamFromString('members');
+        $tokenStream->expectTypeIsOneOf([TestGrammar::TYPE_WHITESPACE, TestGrammar::TYPE_ATTRIBUTE]);
+        $tokenStream->expectType(TestGrammar::TYPE_WHITESPACE);
+    }
+
+    public function testExpectWillReturnInvalidTokenException(): void {
+        $this->expectException(UnexpectedTokenException::class);
+        $tokenStream = $this->lexer->getTokenStreamFromString('members');
+        $tokenStream->expectType(TestGrammar::TYPE_BOOLEAN);
+    }
+
+    public function testExpectTypeAndValueWillReturnInvalidTokenValueException(): void {
+        $this->expectException(UnexpectedTokenValueException::class);
+        $tokenStream = $this->lexer->getTokenStreamFromString('members');
+        $tokenStream->expectTypeAndValue(TestGrammar::TYPE_ATTRIBUTE, "users");
     }
 
     public function testLookAhead(): void {

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Artemeon\Tokenizer;
 
+use Artemeon\Tokenizer\Exception\UnexpectedEndOfTokenStreamException;
 use Artemeon\Tokenizer\Exception\UnexpectedTokenException;
 use Artemeon\Tokenizer\Exception\UnexpectedTokenValueException;
 use Iterator;
@@ -66,10 +67,11 @@ class TokenStream implements Iterator
      * does not match the given type
      *
      * @throws UnexpectedTokenException
+     * @throws UnexpectedEndOfTokenStreamException
      */
     public function expectType(string $expectedType): Token
     {
-        $token = $this->current();
+        $token = $this->getCurrentToken();
 
         if (!$this->checkType($expectedType)) {
             throw UnexpectedTokenException::fromToken($token);
@@ -83,15 +85,13 @@ class TokenStream implements Iterator
      * Return the current token and throws an exception if the token type
      * and value does not match the given type and value
      *
-     * @param string $expectedType
-     * @param mixed $expectedValue
-     * @return Token
      * @throws UnexpectedTokenException
      * @throws UnexpectedTokenValueException
+     * @throws UnexpectedEndOfTokenStreamException
      */
     public function expectTypeAndValue(string $expectedType, mixed $expectedValue): Token
     {
-        $token = $this->current();
+        $token = $this->getCurrentToken();
 
         if ($token->getType() !== $expectedType) {
             throw UnexpectedTokenException::fromToken($token);
@@ -111,10 +111,11 @@ class TokenStream implements Iterator
      *
      * @param string[] $expectedTypes
      * @throws UnexpectedTokenException
+     * @throws UnexpectedEndOfTokenStreamException
      */
     public function expectTypeIsOneOf(array $expectedTypes): Token
     {
-        $token = $this->current();
+        $token = $this->getCurrentToken();
 
         if (!in_array($token->getType(), $expectedTypes)) {
             throw UnexpectedTokenException::fromToken($token);
@@ -214,5 +215,19 @@ class TokenStream implements Iterator
     private function addToken(int $index, Token $token)
     {
         $this->tokenList->add($index, $token);
+    }
+
+    /**
+     * @throws UnexpectedEndOfTokenStreamException
+     */
+    private function getCurrentToken(): Token
+    {
+        $token = $this->current();
+
+        if (!$token instanceof Token) {
+            throw UnexpectedEndOfTokenStreamException::create();
+        }
+
+        return $token;
     }
 }
