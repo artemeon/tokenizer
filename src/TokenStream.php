@@ -83,11 +83,13 @@ class TokenStream implements Iterator
      * Return the current token and throws an exception if the token type
      * and value does not match the given type and value
      *
+     * @param string $expectedType
      * @param mixed $expectedValue
+     * @return Token
      * @throws UnexpectedTokenException
      * @throws UnexpectedTokenValueException
      */
-    public function expectTypeAndValue(string $expectedType, $expectedValue): Token
+    public function expectTypeAndValue(string $expectedType, mixed $expectedValue): Token
     {
         $token = $this->current();
 
@@ -141,7 +143,7 @@ class TokenStream implements Iterator
      *
      * @param mixed $value
      */
-    public function checkTypeAndValue(string $type, $value): bool
+    public function checkTypeAndValue(string $type, mixed $value): bool
     {
         $token = $this->current();
 

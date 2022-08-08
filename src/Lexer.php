@@ -63,6 +63,7 @@ class Lexer
      * Create the TokenStream based on the given line strings
      *
      * @param string[]
+     * @return TokenStream
      */
     private function parseLines(array $lines): TokenStream
     {

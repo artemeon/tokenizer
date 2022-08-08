@@ -29,9 +29,10 @@ class Context
     /**
      * Set the result value of the given Expression
      *
+     * @param Expression $expression
      * @param mixed $result
      */
-    public function setExpressionResult(Expression $expression, $result): void
+    public function setExpressionResult(Expression $expression, mixed $result): void
     {
         $this->expressionStorage->offsetSet($expression, $result);
     }
@@ -39,10 +40,10 @@ class Context
     /**
      * Return the result value of the given expression
      *
+     * @param Expression $expression
      * @return mixed
-     * @throws UnexpectedValueException
      */
-    public function getExpressionResult(Expression $expression)
+    public function getExpressionResult(Expression $expression): mixed
     {
         return $this->expressionStorage->offsetGet($expression);
     }

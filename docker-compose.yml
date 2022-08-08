@@ -3,7 +3,7 @@ version: '3'
 services:
     php:
         build: docker/php
-        image: php:7.2-fpm-alpine-tokenizer-dev
+        image: php:8.1-fpm-alpine-tokenizer-dev
         volumes:
             - ./:/tokenizer
         networks:
