@@ -41,7 +41,9 @@ class Lexer
      */
     public function getTokenStreamFromString(string $input): TokenStream
     {
-        $lines = preg_split("/\n|\r\n?/", $input);
+        /** @var string[] $lines */
+        $lines = (array) preg_split("/\n|\r\n?/", $input);
+
         return $this->parseLines($lines);
     }
 
@@ -50,8 +52,10 @@ class Lexer
      */
     public function getTokenStreamFromFile(SplFileObject $inputFile): TokenStream
     {
+        /** @var string[] $lines */
         $lines = [];
 
+        /** @var string $line */
         foreach ($inputFile as $line) {
             $lines[] = $line;
         }
@@ -62,8 +66,7 @@ class Lexer
     /**
      * Create the TokenStream based on the given line strings
      *
-     * @param string[]
-     * @return TokenStream
+     * @param string[] $lines
      */
     private function parseLines(array $lines): TokenStream
     {
@@ -85,6 +88,10 @@ class Lexer
      */
     private function applyToken(LineParser $lineParser): void
     {
+        /**
+         * @var string $name
+         * @var string $pattern
+         */
         foreach ($this->grammar as $name => $pattern) {
             if (!$lineParser->applyPattern($pattern)) {
                 continue;

@@ -16,7 +16,7 @@ class LexerTest extends TestCase
 {
     private Lexer $lexer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->lexer = Lexer::fromGrammar(new TestGrammar());
     }
@@ -83,7 +83,8 @@ class LexerTest extends TestCase
         self::assertCount(13, $tokenStream);
     }
 
-    public function testExpectWithUnmatchedValues(): void {
+    public function testExpectWithUnmatchedValues(): void
+    {
         $tokenStream = $this->lexer->getTokenStreamFromString('members eq10');
 
         $tokenStream->expectTypeAndValue(TestGrammar::TYPE_ATTRIBUTE, "members");
@@ -132,25 +133,28 @@ class LexerTest extends TestCase
         $tokenStream->expectType(TestGrammar::TYPE_WHITESPACE);
     }
 
-    public function testExpectWillReturnInvalidTokenException(): void {
+    public function testExpectWillReturnInvalidTokenException(): void
+    {
         $this->expectException(UnexpectedTokenException::class);
         $tokenStream = $this->lexer->getTokenStreamFromString('members');
         $tokenStream->expectType(TestGrammar::TYPE_BOOLEAN);
     }
 
-    public function testExpectTypeAndValueWillReturnInvalidTokenValueException(): void {
+    public function testExpectTypeAndValueWillReturnInvalidTokenValueException(): void
+    {
         $this->expectException(UnexpectedTokenValueException::class);
         $tokenStream = $this->lexer->getTokenStreamFromString('members');
         $tokenStream->expectTypeAndValue(TestGrammar::TYPE_ATTRIBUTE, "users");
     }
 
-    public function testLookAhead(): void {
+    public function testLookAhead(): void
+    {
         $tokenStream = $this->lexer->getTokenStreamFromString('members eq');
 
         $token = $tokenStream->lookAhead(1);
-        self::assertSame(TestGrammar::TYPE_WHITESPACE, $token->getType());
+        self::assertSame(TestGrammar::TYPE_WHITESPACE, $token?->getType());
 
         $token = $tokenStream->lookAhead(2);
-        self::assertSame(TestGrammar::TYPE_OPERATOR_EQUALS, $token->getType());
+        self::assertSame(TestGrammar::TYPE_OPERATOR_EQUALS, $token?->getType());
     }
 }

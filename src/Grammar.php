@@ -17,6 +17,8 @@ use IteratorAggregate;
 /**
  * Abstract base class for all individual grammar definitions. Use the abstract methods to configure your
  * own parser grammar syntax.
+ *
+ * @template-implements IteratorAggregate<string, string>
  */
 abstract class Grammar implements IteratorAggregate
 {
@@ -58,7 +60,7 @@ abstract class Grammar implements IteratorAggregate
     abstract protected function registerIgnoredTokenNames(): array;
 
     /**
-     * @inheritDoc
+     * @return ArrayIterator<string, string>
      */
     public function getIterator(): ArrayIterator
     {

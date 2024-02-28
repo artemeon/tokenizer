@@ -12,14 +12,14 @@ declare(strict_types=1);
 namespace Artemeon\Tokenizer;
 
 use SplObjectStorage;
-use UnexpectedValueException;
 
 /**
  * Example Context class as described in the interpreter pattern
  */
 class Context
 {
-    protected SplObjectStorage $expressionStorage;
+    /** @var SplObjectStorage<Expression, mixed> $expressionStorage */
+    private SplObjectStorage $expressionStorage;
 
     public function __construct()
     {
@@ -27,10 +27,7 @@ class Context
     }
 
     /**
-     * Set the result value of the given Expression
-     *
-     * @param Expression $expression
-     * @param mixed $result
+     * Set the result value of the given Expression.
      */
     public function setExpressionResult(Expression $expression, mixed $result): void
     {
@@ -38,10 +35,7 @@ class Context
     }
 
     /**
-     * Return the result value of the given expression
-     *
-     * @param Expression $expression
-     * @return mixed
+     * Return the result value of the given expression.
      */
     public function getExpressionResult(Expression $expression): mixed
     {
