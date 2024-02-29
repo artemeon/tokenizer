@@ -19,9 +19,12 @@ use SplDoublyLinkedList;
 
 /**
  * Token collection with several helper function for parser
+ *
+ * @template-implements Iterator<int, Token>
  */
 class TokenStream implements Iterator
 {
+    /** @var SplDoublyLinkedList<Token> $tokenList */
     private SplDoublyLinkedList $tokenList;
 
     public function __construct()
@@ -32,7 +35,7 @@ class TokenStream implements Iterator
     /**
      * Named constructor to create an instance based on the given array
      *
-     * @param $tokens Token[]
+     * @param Token[] $tokens
      */
     public static function fromArray(array $tokens): self
     {
@@ -212,7 +215,7 @@ class TokenStream implements Iterator
     /**
      * Add a token to the list
      */
-    private function addToken(int $index, Token $token)
+    private function addToken(int $index, Token $token): void
     {
         $this->tokenList->add($index, $token);
     }

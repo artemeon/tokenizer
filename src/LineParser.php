@@ -23,7 +23,7 @@ class LineParser
     private int $characterPosition = 0;
     private int $characterOffset = 0;
 
-    private function __construct(string $line, $number)
+    private function __construct(string $line, int $number)
     {
         $this->line = $line;
         $this->lineNumber = $number;
